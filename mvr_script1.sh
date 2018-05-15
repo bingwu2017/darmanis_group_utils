@@ -8,7 +8,7 @@
 ### shared out bucket, according to a list of desired cells.
 ###########################################################
 ###########################################################
-!/bin/bash
+#!/bin/bash
 
 #170125_NS500126_0647_AHVHJ2BGXY - LOOP 1
 echo "170125_NS500126_0647_AHVHJ2BGXY"
@@ -251,13 +251,10 @@ done
 #180226_A00111_0105_AH3KCHDSXX - LOOP 10
 echo "180226_A00111_0105_AH3KCHDSXX"
 for dir in $(aws s3 ls s3://czbiohub-seqbot/fastqs/180226_A00111_0105_AH3KCHDSXX/rawdata | awk '{print $2}'); do
-	for file in $(aws s3 ls s3://czbiohub-seqbot/fastqs/180226_A00111_0105_AH3KCHDSXX/rawdata${dir}); do
-		if [[ $file = *".gz" ]]; then
-			fileName=${file%__*}
-			fileName1=$(echo "$fileName" | tr -d "/")
-			fileName2=$(echo "$fileName1" | tr -d " ")
-		fi
-	done
+
+	dirName=$(echo "$dir" | tr -d "/")
+	dirName1=$(echo "$dirName" | tr -d " ")
+
 	for line in $(cat tCellList.csv); do
 
 		line1=$(echo "$line" | tr -d "\n")
@@ -278,13 +275,11 @@ done
 #180307_A00111_0109_BH3KCJDSXX - LOOP 11
 echo "180307_A00111_0109_BH3KCJDSXX"
 for dir in $(aws s3 ls s3://czbiohub-seqbot/fastqs/180307_A00111_0109_BH3KCJDSXX/rawdata/ | awk '{print $2}'); do
-	for file in $(aws s3 ls s3://czbiohub-seqbot/fastqs/180307_A00111_0109_BH3KCJDSXX/rawdata/${dir}); do
-		if [[ $file = *".gz" ]]; then
-			fileName=${file%__*}
-			fileName1=$(echo "$fileName" | tr -d "/")
-			fileName2=$(echo "$fileName1" | tr -d " ")
-		fi
-	done
+
+	dirName=$(echo "$dir" | tr -d "/")
+	dirName1=$(echo "$dirName" | tr -d " ")
+
+
 	for line in $(cat tCellList.csv); do
 
 		line1=$(echo "$line" | tr -d "\n")
@@ -305,13 +300,10 @@ done
 #180319_A00111_0119_AH3JYJDSXX - LOOP 12
 echo "180319_A00111_0119_AH3JYJDSXX"
 for dir in $(aws s3 ls s3://czbiohub-seqbot/fastqs/180319_A00111_0119_AH3JYJDSXX/rawdata/ | awk '{print $2}'); do
-	for file in $(aws s3 ls s3://czbiohub-seqbot/fastqs/180319_A00111_0119_AH3JYJDSXX/rawdata/${dir}); do
-		if [[ $file = *".gz" ]]; then
-			fileName=${file%__*}
-			fileName1=$(echo "$fileName" | tr -d "/")
-			fileName2=$(echo "$fileName1" | tr -d " ")
-		fi
-	done
+
+	dirName=$(echo "$dir" | tr -d "/")
+	dirName1=$(echo "$dirName" | tr -d " ")
+
 	for line in $(cat tCellList.csv); do
 
 		line1=$(echo "$line" | tr -d "\n")
@@ -332,13 +324,10 @@ done
 #180320_NB501961_0086_AHLGLGBGX5 - LOOP 13
 echo "180320_NB501961_0086_AHLGLGBGX5"
 for dir in $(aws s3 ls s3://czbiohub-seqbot/fastqs/180320_NB501961_0086_AHLGLGBGX5/rawdata/ | awk '{print $2}'); do
-	for file in $(aws s3 ls s3://czbiohub-seqbot/fastqs/180320_NB501961_0086_AHLGLGBGX5/rawdata/${dir}); do
-		if [[ $file = *".gz" ]]; then
-			fileName=${file%__*}
-			fileName1=$(echo "$fileName" | tr -d "/")
-			fileName2=$(echo "$fileName1" | tr -d " ")
-		fi
-	done
+
+	dirName=$(echo "$dir" | tr -d "/")
+	dirName1=$(echo "$dirName" | tr -d " ")
+
 	for line in $(cat tCellList.csv); do
 
 		line1=$(echo "$line" | tr -d "\n")
@@ -359,13 +348,10 @@ done
 #180405_A00111_0129_BH3VFYDSXX - LOOP 14
 echo "180405_A00111_0129_BH3VFYDSXX"
 for dir in $(aws s3 ls s3://czbiohub-seqbot/fastqs/180405_A00111_0129_BH3VFYDSXX/rawdata/ | awk '{print $2}'); do
-	for file in $(aws s3 ls s3://czbiohub-seqbot/fastqs/180405_A00111_0129_BH3VFYDSXX/rawdata/${dir}); do
-		if [[ $file = *".gz" ]]; then
-			fileName=${file%__*}
-			fileName1=$(echo "$fileName" | tr -d "/")
-			fileName2=$(echo "$fileName1" | tr -d " ")
-		fi
-	done
+
+	dirName=$(echo "$dir" | tr -d "/")
+	dirName1=$(echo "$dirName" | tr -d " ")
+
 	for line in $(cat tCellList.csv); do
 
 		line1=$(echo "$line" | tr -d "\n")
@@ -386,13 +372,10 @@ done
 #180423_A00111_0141_AH3VFNDSXX - LOOP 15
 echo "180423_A00111_0141_AH3VFNDSXX"
 for dir in $(aws s3 ls s3://czbiohub-seqbot/fastqs/180423_A00111_0141_AH3VFNDSXX/rawdata/ | awk '{print $2}'); do
-	for file in $(aws s3 ls s3://czbiohub-seqbot/fastqs/180423_A00111_0141_AH3VFNDSXX/rawdata/${dir}); do
-		if [[ $file = *".gz" ]]; then
-			fileName=${file%__*}
-			fileName1=$(echo "$fileName" | tr -d "/")
-			fileName2=$(echo "$fileName1" | tr -d " ")
-		fi
-	done
+
+	dirName=$(echo "$dir" | tr -d "/")
+	dirName1=$(echo "$dirName" | tr -d " ")
+
 	for line in $(cat tCellList.csv); do
 
 		line1=$(echo "$line" | tr -d "\n")
