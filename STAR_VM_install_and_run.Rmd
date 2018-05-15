@@ -1,0 +1,108 @@
+---
+title: "STAR_VM_install_and_run.Rmd"
+author: "Lincoln Harris"
+date: "3/9/2018"
+output: html_document
+---
+
+## Configure your VM
+
+**From your AWS console:**                 
+   1. Make sure region is N.Virginia 
+    2. Go to *IMAGES* > *AMIs*        
+    3. Enter *linc_image_gen_t3* in the search bar
+    4. ctrl-click on this AMI, and select *launch* from the drop down menu      
+        **This AMI is pre-configured with STAR_2.5.3a_modified, and 500 GiB physical storage**     
+    5. Choose an instance type. For STAR index generate, I usually select m4.10xlarge
+    6. Select *Review & Launch*            
+    7. Select *Launch*          
+    8. Select your key pair (.pem) from the drop down menu
+    9. Select *Launch instance*         
+    10. Select *View Instances*         
+    11. From the display screen of running instances, search for yours by the name of you key pair (it sometimes takes a minute before you can view your instance)
+    12. Once you've located your instance, give it a descriptive name by clicking on the name field
+    13. As soon as the *Status Check* field for your instance moves from *Initializing* to *2/2 checks*, you're ready to login
+  
+  
+To login to your VM: 
+```{r}
+ssh -i /path/to/keyPair/myFile.pem ubuntu@<PublicDNS>
+```
+you can access the Public DNS (IPv4) for your instance on your AWS console
+
+Run just to make sure everything is working
+```{r}
+STAR --version
+```
+
+## Push up your data
+
+This will copy a file from your local machine to the home (~) directory of your VM **(From local terminal)**                     
+```{r}
+scp -i /path/to/keyPair/myFile.pem /path/to/local/file ubuntu@<PublicDNS>:~ 
+```
+
+To run STAR you'll need to push up **.fa** & **.gtf** files for your genome
+
+## Run STAR
+
+**Step 1 -- Generate genome index**         
+
+we'll run STAR from within a new directory 
+```{r}
+mkdir wkdir
+cd wkdir
+```
+
+copy files into working directory
+```{r}
+cp ../*.fa ./
+cp ../*.gtf ./
+```
+   
+Create a directory where the genome indicies will be stored
+```{r}
+mkdir my_genome_dir
+```
+ 
+Give STAR special permissions to write to this dir
+```{r}
+sudo chmod -R 777 my_genome_dir/
+```
+
+Run STAR genome generate  
+```{r}
+STAR --runThreadN 32 --runMode genomeGenerate --genomeDir ./my_genome_dir/ --genomeFastaFiles ./*.fa --sjdbGTFfile ./*.gtf --sjdbOverhang 75
+```
+
+The genome index will be written to my_genome_dir/
+
+**Step 2 -- Run Mapping**           
+
+These are the params I run mapping with -- pretty sure they're exactly the same as the aegea STAR pipeline
+```{r}
+STAR --runThreadN 12 --genomeDir genomeDir/ --readFilesIn ./A12-1000500501/A12-1000500501_R1.fasta ./A12-1000500501/A12-1000500501_R2.fasta --twopassMode Basic --outSJfilterCountTotalMin 1 1 1 1 --outSJfilterCountUniqueMin 1 1 1 1 --outFilterMultimapNmax 20 --alignSJoverhangMin 8 --alignSJDBoverhangMin 1 --outFilterMismatchNmax 999 --outFilterMismatchNoverLmax 0.04 --alignIntronMin 20 --alignIntronMax 1000000 --alignMatesGapMax 1000000 --outSAMstrandField intronMotif
+```
+
+## Pull down your data
+
+To copy a single file **(From local terminal)**                       
+```{r}
+scp -i /path/to/keyPair/myFile.pem ubuntu@<PublicDNS>:~/path/to/file/on/VM /destination/on/local
+```
+
+or an entire directory **(From local terminal)**         
+```{r}
+scp -i /path/to/keyPair/myFile.pem -r ubuntu@<PublicDNS>:~/path/to/dir/on/VM /destination/on/local
+```
+
+## Shutting Down
+
+To exit the instance
+```{r}
+logout
+```
+(sometimes need to enter this twice)
+
+Back in the console, ctrl-click the instance name, and select *terminate*     
+
