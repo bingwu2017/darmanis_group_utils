@@ -32,7 +32,7 @@ for dir in $(aws s3 ls s3://amaynard-bucket/170125_NS500126_0647_AHVHJ2BGXY/ | a
 			echo " "
 			echo 'match found'
 			echo $line4
-			aws s3 cp s3://amaynard-bucket/170125_NS500126_0647_AHVHJ2BGXY/$dir s3://lincoln.harris-work/tCellGrab/170125_NS500126_0647_AHVHJ2BGXY/$dir --recursive --exclude '*' --include '*.gz'
+			aws s3 cp s3://amaynard-bucket/170125_NS500126_0647_AHVHJ2BGXY/$dir s3://lincoln.harris-work/scratch1/170125_NS500126_0647_AHVHJ2BGXY/$dir --recursive --exclude '*' --include '*.gz'
 			echo " "
 		fi
 	done
@@ -59,7 +59,7 @@ for dir in $(aws s3 ls s3://amaynard-bucket/170129_NS500126_0650_AHVM75BGXY/ | a
 			echo " "
 			echo 'match found'
 			echo $line4
-			aws s3 cp s3://amaynard-bucket/170129_NS500126_0650_AHVM75BGXY/$dir s3://lincoln.harris-work/tCellGrab/170129_NS500126_0650_AHVM75BGXY/$fileName2 --recursive --exclude '*' --include '*.gz'
+			aws s3 cp s3://amaynard-bucket/170129_NS500126_0650_AHVM75BGXY/$dir s3://lincoln.harris-work/scratch1/170129_NS500126_0650_AHVM75BGXY/$fileName2 --recursive --exclude '*' --include '*.gz'
 			echo " "
 		fi
 	done
@@ -86,7 +86,7 @@ for dir in $(aws s3 ls s3://amaynard-bucket/170202_NS500126_0653_AHVL5NBGXY/ | a
 			echo " "
 			echo 'match found'
 			echo $line4
-			aws s3 cp s3://amaynard-bucket/170202_NS500126_0653_AHVL5NBGXY/$dir s3://lincoln.harris-work/tCellGrab/170202_NS500126_0653_AHVL5NBGXY/$dir --recursive --exclude '*' --include '*.gz'
+			aws s3 cp s3://amaynard-bucket/170202_NS500126_0653_AHVL5NBGXY/$dir s3://lincoln.harris-work/scratch1/170202_NS500126_0653_AHVL5NBGXY/$dir --recursive --exclude '*' --include '*.gz'
 			echo " "
 		fi
 	done
@@ -113,7 +113,7 @@ for dir in $(aws s3 ls s3://amaynard-bucket/170215_NS500126_0658_AH7TLYBGX2/ | a
 			echo " "
 			echo 'match found'
 			echo $line4
-			aws s3 cp s3://amaynard-bucket/170215_NS500126_0658_AH7TLYBGX2/$dir s3://lincoln.harris-work/tCellGrab/170215_NS500126_0658_AH7TLYBGX2/$dir --recursive --exclude '*' --include '*.gz'
+			aws s3 cp s3://amaynard-bucket/170215_NS500126_0658_AH7TLYBGX2/$dir s3://lincoln.harris-work/scratch1/170215_NS500126_0658_AH7TLYBGX2/$dir --recursive --exclude '*' --include '*.gz'
 			echo " "
 		fi
 	done
@@ -140,7 +140,7 @@ for dir in $(aws s3 ls s3://amaynard-bucket/170504_NS500126_0691_AHC22JBGX2/ | a
 			echo " "
 			echo 'match found'
 			echo $line4
-			aws s3 cp s3://amaynard-bucket/170504_NS500126_0691_AHC22JBGX2/$dir s3://lincoln.harris-work/tCellGrab/170504_NS500126_0691_AHC22JBGX2/$dir --recursive --exclude '*' --include '*.gz'
+			aws s3 cp s3://amaynard-bucket/170504_NS500126_0691_AHC22JBGX2/$dir s3://lincoln.harris-work/scratch1/170504_NS500126_0691_AHC22JBGX2/$dir --recursive --exclude '*' --include '*.gz'
 			echo " "
 		fi
 	done
@@ -167,7 +167,7 @@ for dir in $(aws s3 ls s3://amaynard-bucket/170508_NS500126_0693_AHC2MFBGX2/ | a
 			echo " "
 			echo 'match found'
 			echo $line4
-			aws s3 cp s3://amaynard-bucket/170504_NS500126_0691_AHC22JBGX2/$dir s3://lincoln.harris-work/tCellGrab/170508_NS500126_0693_AHC2MFBGX2/$dir --recursive --exclude '*' --include '*.gz'
+			aws s3 cp s3://amaynard-bucket/170504_NS500126_0691_AHC22JBGX2/$dir s3://lincoln.harris-work/scratch1/170508_NS500126_0693_AHC2MFBGX2/$dir --recursive --exclude '*' --include '*.gz'
 			echo " "
 		fi
 	done
@@ -194,7 +194,7 @@ for dir in $(aws s3 ls s3://amaynard-bucket/170510_NB501938_0003_AHM7KMBGX2/ | a
 			echo " "
 			echo 'match found'
 			echo $line4
-			aws s3 cp s3://amaynard-bucket/170504_NS500126_0691_AHC22JBGX2/$dir s3://lincoln.harris-work/tCellGrab/170510_NB501938_0003_AHM7KMBGX2/$dir --recursive --exclude '*' --include '*.gz'
+			aws s3 cp s3://amaynard-bucket/170504_NS500126_0691_AHC22JBGX2/$dir s3://lincoln.harris-work/scratch1/170510_NB501938_0003_AHM7KMBGX2/$dir --recursive --exclude '*' --include '*.gz'
 			echo " "
 		fi
 	done
@@ -218,7 +218,7 @@ for dir in $(aws s3 ls s3://lincoln.harris-work/171120_A00111_0085_AH57YYDMXX/ |
 			echo " "
 			echo 'match found'
 			echo $line4
-			aws s3 cp s3://lincoln.harris-work/171120_A00111_0085_AH57YYDMXX/$dir s3://lincoln.harris-work/tCellGrab/171120_A00111_0085_AH57YYDMXX/$dir --recursive
+			aws s3 cp s3://lincoln.harris-work/171120_A00111_0085_AH57YYDMXX/$dir s3://lincoln.harris-work/scratch1/171120_A00111_0085_AH57YYDMXX/$dir --recursive
 			echo " "
 		fi
 	done
@@ -242,7 +242,7 @@ for dir in $(aws s3 ls s3://lincoln.harris-work/171120_A00111_0086_BH55NVDMXX/ |
 			echo " "
 			echo 'match found'
 			echo $line4
-			aws s3 cp s3://lincoln.harris-work/171120_A00111_0086_BH55NVDMXX/$dir s3://lincoln.harris-work/tCellGrab/171120_A00111_0086_BH55NVDMXX/$dir --recursive
+			aws s3 cp s3://lincoln.harris-work/171120_A00111_0086_BH55NVDMXX/$dir s3://lincoln.harris-work/scratch1/171120_A00111_0086_BH55NVDMXX/$dir --recursive
 			echo " "
 		fi
 	done
@@ -269,7 +269,7 @@ for dir in $(aws s3 ls s3://czbiohub-seqbot/fastqs/180226_A00111_0105_AH3KCHDSXX
 			echo " "
 			echo 'match found'
 			echo $line4
-			aws s3 cp s3://amaynard-bucket/170504_NS500126_0691_AHC22JBGX2/$dir s3://lincoln.harris-work/tCellGrab/180226_A00111_0105_AH3KCHDSXX/$dir --recursive --exclude '*' --include '*.gz'
+			aws s3 cp s3://amaynard-bucket/170504_NS500126_0691_AHC22JBGX2/$dir s3://lincoln.harris-work/scratch1/180226_A00111_0105_AH3KCHDSXX/$dir --recursive --exclude '*' --include '*.gz'
 			echo " "
 		fi
 	done
@@ -296,7 +296,7 @@ for dir in $(aws s3 ls s3://czbiohub-seqbot/fastqs/180307_A00111_0109_BH3KCJDSXX
 			echo " "
 			echo 'match found'
 			echo $line4
-			aws s3 cp s3://amaynard-bucket/170504_NS500126_0691_AHC22JBGX2/$dir s3://lincoln.harris-work/tCellGrab/180307_A00111_0109_BH3KCJDSXX/$dir --recursive --exclude '*' --include '*.gz'
+			aws s3 cp s3://amaynard-bucket/170504_NS500126_0691_AHC22JBGX2/$dir s3://lincoln.harris-work/scratch1/180307_A00111_0109_BH3KCJDSXX/$dir --recursive --exclude '*' --include '*.gz'
 			echo " "
 		fi
 	done
@@ -323,7 +323,7 @@ for dir in $(aws s3 ls s3://czbiohub-seqbot/fastqs/180319_A00111_0119_AH3JYJDSXX
 			echo " "
 			echo 'match found'
 			echo $line4
-			aws s3 cp s3://amaynard-bucket/170504_NS500126_0691_AHC22JBGX2/$dir s3://lincoln.harris-work/tCellGrab/180319_A00111_0119_AH3JYJDSXX/$dir --recursive --exclude '*' --include '*.gz'
+			aws s3 cp s3://amaynard-bucket/170504_NS500126_0691_AHC22JBGX2/$dir s3://lincoln.harris-work/scratch1/180319_A00111_0119_AH3JYJDSXX/$dir --recursive --exclude '*' --include '*.gz'
 			echo " "
 		fi
 	done
@@ -350,7 +350,7 @@ for dir in $(aws s3 ls s3://czbiohub-seqbot/fastqs/180320_NB501961_0086_AHLGLGBG
 			echo " "
 			echo 'match found'
 			echo $line4
-			aws s3 cp s3://amaynard-bucket/170504_NS500126_0691_AHC22JBGX2/$dir s3://lincoln.harris-work/tCellGrab/180320_NB501961_0086_AHLGLGBGX5/$dir --recursive --exclude '*' --include '*.gz'
+			aws s3 cp s3://amaynard-bucket/170504_NS500126_0691_AHC22JBGX2/$dir s3://lincoln.harris-work/scratch1/180320_NB501961_0086_AHLGLGBGX5/$dir --recursive --exclude '*' --include '*.gz'
 			echo " "
 		fi
 	done
@@ -377,7 +377,7 @@ for dir in $(aws s3 ls s3://czbiohub-seqbot/fastqs/180405_A00111_0129_BH3VFYDSXX
 			echo " "
 			echo 'match found'
 			echo $line4
-			aws s3 cp s3://amaynard-bucket/170504_NS500126_0691_AHC22JBGX2/$dir s3://lincoln.harris-work/tCellGrab/180405_A00111_0129_BH3VFYDSXX/$dir --recursive --exclude '*' --include '*.gz'
+			aws s3 cp s3://amaynard-bucket/170504_NS500126_0691_AHC22JBGX2/$dir s3://lincoln.harris-work/scratch1/180405_A00111_0129_BH3VFYDSXX/$dir --recursive --exclude '*' --include '*.gz'
 			echo " "
 		fi
 	done
@@ -404,7 +404,7 @@ for dir in $(aws s3 ls s3://czbiohub-seqbot/fastqs/180423_A00111_0141_AH3VFNDSXX
 			echo " "
 			echo 'match found'
 			echo $line4
-			aws s3 cp s3://amaynard-bucket/170504_NS500126_0691_AHC22JBGX2/$dir s3://lincoln.harris-work/tCellGrab/180423_A00111_0141_AH3VFNDSXX/$dir --recursive --exclude '*' --include '*.gz'
+			aws s3 cp s3://amaynard-bucket/170504_NS500126_0691_AHC22JBGX2/$dir s3://lincoln.harris-work/scratch1/180423_A00111_0141_AH3VFNDSXX/$dir --recursive --exclude '*' --include '*.gz'
 			echo " "
 		fi
 	done
