@@ -5,7 +5,7 @@ date: "4/16/2018"
 output: html_document
 ---
 
-*Instructions for how to to set up and run programs on an Ubuntu AMI that has been pre-configured with a number of useful programs including STAR, Trinity & BLAST. *      
+*Instructions for how to to set up and run programs on an Ubuntu AMI that has been pre-configured with a number of useful programs including STAR, Trinity & BLAST.*      
 
 ## Configure machine
 
