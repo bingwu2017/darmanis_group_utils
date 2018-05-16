@@ -12,3 +12,8 @@
 	  generalizable rather than specific to the tasks I've used them
 	  for.              
 **TODO:** What other scripts should we push up?           
+
+
+--**PULL BEFORE YOU PUSH!!**__
+
+Also, be sure to add `00-READMEs` to whatever directories you initialize
