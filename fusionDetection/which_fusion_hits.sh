@@ -23,8 +23,8 @@ for dir in */; do
 	
 	if grep -q "Sequences producing significant alignments:" ${cellID}_unmapped_R2_eml4_fusion_blastOut.txt;
 	then
-                echo $cellID
-        fi
+		echo $cellID
+	fi
 	
 	cd ../../
 done

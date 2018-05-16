@@ -17,7 +17,7 @@ do
 	mkdir $cellID
 	cd $cellID
 
-    cp ../alk_human_mrna.fa ./
+	cp ../alk_human_mrna.fa ./
 	
 	aws s3 cp s3://amaynard-bucket/170504_NS500126_0691_AHC22JBGX2/${dir}STAR_out/Unmapped.out.mate1 ./
 	aws s3 cp s3://amaynard-bucket/170504_NS500126_0691_AHC22JBGX2/${dir}STAR_out/Unmapped.out.mate2 ./
@@ -34,10 +34,10 @@ do
 	fastq_to_fasta -i ${cellID}_unmapped.R2.fastq -o ${cellID}_unmapped.R2.fasta
 
 	touch ${cellID}_unmapped.R1_1.fasta
-    touch ${cellID}_unmapped.R2_1.fasta
+	touch ${cellID}_unmapped.R2_1.fasta
 
 	chmod 666 ${cellID}_unmapped.R1_1.fasta
-    chmod 666 ${cellID}_unmapped.R2_1.fasta
+	chmod 666 ${cellID}_unmapped.R2_1.fasta
 	
 	while read l; do
 		nl=$(echo "$l" | tr -d "	")
@@ -45,18 +45,18 @@ do
 	done < ${cellID}_unmapped.R1.fasta
 
 	while read l; do
-    	nl=$(echo "$l" | tr -d "	")
-    	echo $nl >> ${cellID}_unmapped.R2_1.fasta
+		nl=$(echo "$l" | tr -d "	")
+		echo $nl >> ${cellID}_unmapped.R2_1.fasta
 	done < ${cellID}_unmapped.R2.fasta
 
 	makeblastdb -in ${cellID}_unmapped.R1_1.fasta -parse_seqids -dbtype nucl
 	makeblastdb -in ${cellID}_unmapped.R2_1.fasta -parse_seqids -dbtype nucl
 
-  	touch ${cellID}_unmapped.R1_blastOut.txt
-    touch ${cellID}_unmapped.R2_blastOut.txt
+	touch ${cellID}_unmapped.R1_blastOut.txt
+	touch ${cellID}_unmapped.R2_blastOut.txt
 
-    chmod 666 ${cellID}_unmapped.R1_blastOut.txt
-    chmod 666 ${cellID}_unmapped.R2_blastOut.txt
+	chmod 666 ${cellID}_unmapped.R1_blastOut.txt
+	chmod 666 ${cellID}_unmapped.R2_blastOut.txt
 	
 	blastn -query alk_human_mrna.fa -db ${cellID}_unmapped.R1_1.fasta > ${cellID}_unmapped.R1_blastOut.txt
 	blastn -query alk_human_mrna.fa -db ${cellID}_unmapped.R2_1.fasta > ${cellID}_unmapped.R2_blastOut.txt

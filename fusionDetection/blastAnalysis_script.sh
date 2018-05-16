@@ -26,6 +26,8 @@ for dir in */ ; do
 		if grep -q $line *_eml4_blastOut.txt  #if eml match
 		then
 
+			# For Read1
+
 			touch myChunk.txt
 			chmod 666 myChunk.txt
 			touch tList.txt
@@ -46,27 +48,27 @@ for dir in */ ; do
 			rm myChunk.txt
 			mv ${cellID}_unmapped.R1_tlist.txt ../../blastGrab
 			
-#############################################################################
+			# For Read2
 
 			touch myChunk.txt
-            chmod 666 myChunk.txt
-            touch tList.txt
-            chmod 666 tList.txt
-            sed -n -e '/Sequences producing significant alignments:/,/>/ p' *_unmapped.R2_blastOut.txt > myChunk.txt
-            sed -i '/Sequences producing significant alignments:/d' myChunk.txt
-            sed -i '/>/d' myChunk.txt
+			chmod 666 myChunk.txt
+			touch tList.txt
+			chmod 666 tList.txt
+			sed -n -e '/Sequences producing significant alignments:/,/>/ p' *_unmapped.R2_blastOut.txt > myChunk.txt
+			sed -i '/Sequences producing significant alignments:/d' myChunk.txt
+			sed -i '/>/d' myChunk.txt
 
-            for t_ID in $(cat myChunk.txt | tr -s ' ' | cut -d ' ' -f1); do
-                t_ID1=$t_ID
-                t_ID2=$(echo "$t_ID1" | tr -d " ")
-                echo $t_ID2 >> tList.txt
-                echo "grabbed transcript ID!!"
-            done
+			for t_ID in $(cat myChunk.txt | tr -s ' ' | cut -d ' ' -f1); do
+				t_ID1=$t_ID
+				t_ID2=$(echo "$t_ID1" | tr -d " ")
+				echo $t_ID2 >> tList.txt
+				echo "grabbed transcript ID!!"
+			done
 
-            echo "finished a blast_out file!!"
-            mv tList.txt ${cellID}_unmapped.R2_tlist.txt
-            rm myChunk.txt
-            mv ${cellID}_unmapped.R2_tlist.txt ../../blastGrab
+			echo "finished a blast_out file!!"
+			mv tList.txt ${cellID}_unmapped.R2_tlist.txt
+			rm myChunk.txt
+			mv ${cellID}_unmapped.R2_tlist.txt ../../blastGrab
 		fi
 	fi
         cd ../../
