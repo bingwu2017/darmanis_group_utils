@@ -1,0 +1,60 @@
+---
+title: "ami_spinUp_howto"
+author: "Lincoln Harris"
+date: "4/16/2018"
+output: html_document
+---
+
+*Instructions for how to to set up and run programs on an Ubuntu AMI that has been pre-configured with a number of useful programs including STAR, Trinity & BLAST.*      
+
+## Configure machine
+
+**From your AWS EC2 console:** 
+  1. Make sure region is *US West (Oregon)*
+  2. Go to *IMAGES* > *AMIs*
+  3. Enter *marvin* in the search bar
+  4. ctrl-click on this AMI, and select *launch* from the drop down menu  
+  5. Choose an instance type. For STAR index generate, I usually select m4.10xlarge
+  6. Select *Review & Launch*            
+  7. Select *Launch*          
+  8. Select your key pair (.pem) from the drop down menu
+  9. Select *Launch instance*         
+  10. Select *View Instances*         
+  11. From the display screen of running instances, search for yours by the name of you key pair (it sometimes takes a minute before you can view your instance)
+  12. Once you've located your instance, give it a descriptive name by clicking on the name field
+  13. As soon as the *Status Check* field for your instance moves from *Initializing* to *2/2 checks*, you're ready to login
+
+To login to your VM: 
+```{r}
+ssh -i /path/to/keyPair/myFile.pem ubuntu@<PublicDNS>
+```
+you can access the Public DNS (IPv4) for your instance on your AWS console
+
+## Push up your data
+
+This will copy a file from your local machine to the home (~) directory of your VM **(From local terminal)**                     
+```{r}
+scp -i /path/to/keyPair/myFile.pem /path/to/local/file ubuntu@<PublicDNS>:~ 
+```
+
+## Pull down your data
+
+To copy a single file **(From local terminal)**                       
+```{r}
+scp -i /path/to/keyPair/myFile.pem ubuntu@<PublicDNS>:~/path/to/file/on/VM /destination/on/local
+```
+
+or an entire directory **(From local terminal)**         
+```{r}
+scp -i /path/to/keyPair/myFile.pem -r ubuntu@<PublicDNS>:~/path/to/dir/on/VM /destination/on/local
+```
+
+## Shutting Down
+
+To exit the instance
+```{r}
+logout
+```
+(sometimes need to enter this twice)
+
+Back in the console, ctrl-click the instance name, and select *terminate*   
