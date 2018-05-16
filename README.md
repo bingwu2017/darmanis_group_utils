@@ -14,6 +14,6 @@
 **TODO:** What other scripts should we push up?           
 
 
---**PULL BEFORE YOU PUSH!!**__
+**_PULL BEFORE YOU PUSH!!_**
 
-Also, be sure to add `00-READMEs` to whatever directories you initialize
+Also, be sure to add `README.md`s to whatever directories you initialize
