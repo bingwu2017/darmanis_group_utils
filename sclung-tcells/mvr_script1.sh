@@ -47,6 +47,7 @@ for dir in $(aws s3 ls s3://amaynard-bucket/170129_NS500126_0650_AHVM75BGXY/ | a
 			fileName=${file%__*}
 			fileName1=$(echo "$fileName" | tr -d "/")
 			fileName2=$(echo "$fileName1" | tr -d " ")
+			echo $fileName2
 		fi
 	done
 	for line in $(cat tCellList.csv); do
@@ -214,7 +215,7 @@ for dir in $(aws s3 ls s3://lincoln.harris-work/171120_A00111_0085_AH57YYDMXX/ |
 	dirName1=$(echo "$dirName" | tr -d " ")
 	echo $dirName1
 
-	for line in $(cat tCellList.txt); do
+	for line in $(cat tCellList.csv); do
 
 		line1=$(echo "$line" | tr -d "\n")
 		line2=$(echo "$line1" | tr -d " ")
@@ -239,7 +240,7 @@ for dir in $(aws s3 ls s3://lincoln.harris-work/171120_A00111_0086_BH55NVDMXX/ |
 	dirName1=$(echo "$dirName" | tr -d " ")
 	echo $dirName1
 
-	for line in $(cat tCellList.txt); do
+	for line in $(cat tCellList.csv); do
 
 		line1=$(echo "$line" | tr -d "\n")
 		line2=$(echo "$line1" | tr -d " ")
