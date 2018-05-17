@@ -7,26 +7,26 @@ library(tidyverse)
 
 
 ### Values will be the same for the entire column
-Study_ID <- "study_id"
-Study_Description <- "study_description"
+Study_ID <- "SCLUNG_NEXT6"
+Study_Description <- "sclung_sclungnext6"
 BioSample_ID<-''
-BioSample_Description <- "Description"
+BioSample_Description <- "scrnaseq_lungadeno_pt_samples"
 Sample_ID <- c()
-Sample_Owner <- "Name"
+Sample_Owner <- "Ashley"
 Organism <- "Human"
 Host <- ''
 Gender <-''
 Tissue_Source <- ''
 FACS_Markers <- ''
 
-index<- read_csv(file = "/Users/michelle.tan/Desktop/SampleSheet side project/Non-combinitorial Index (12).csv")
-input <- read_csv("/Users/michelle.tan/Desktop/SampleSheet side project/input.csv") ###change
+index<- read_csv(file = "Non-combinitorial Index (12).csv")
+input <- read_csv("~/code/darmanis_group_utils/samplesheet_generator/input.csv") ###change
 unique_index <- unique(input$index)
 new_index <- subset(index, index_plate %in% unique_index) 
 
 
 
-if (input$sequencer[1] == "novaseq" || input$sequencer[1] == "miseq" ){
+if (input$sequencer[1] == "novaseq" || input$sequencer[1] == "miseq" || input$sequencer[1] == "nextseq" ){
   update_index <-new_index %>%
     select(Index_ID = index_name,Index= index_i7_revcom,Index2=index2_i5_revcom,well_id,index_plate)
   
