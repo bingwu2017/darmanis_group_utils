@@ -34,6 +34,7 @@ for dir in $(aws s3 ls s3://amaynard-bucket/170125_NS500126_0647_AHVHJ2BGXY/ | a
 			echo $line4
 			aws s3 cp s3://amaynard-bucket/170125_NS500126_0647_AHVHJ2BGXY/$dir s3://darmanis-group/singlecell_lungadeno/tcell/fastqs/170125_NS500126_0647_AHVHJ2BGXY/$dir --recursive --exclude '*' --include '*.gz'
 			echo " "
+			echo $fileName2
 		fi
 	done
 done
@@ -73,6 +74,7 @@ for dir in $(aws s3 ls s3://amaynard-bucket/170202_NS500126_0653_AHVL5NBGXY/ | a
 			fileName=${file%__*}
 			fileName1=$(echo "$fileName" | tr -d "/")
 			fileName2=$(echo "$fileName1" | tr -d " ")
+			echo $fileName2
 		fi
 	done
 	for line in $(cat tCellList.csv); do
@@ -100,6 +102,7 @@ for dir in $(aws s3 ls s3://amaynard-bucket/170215_NS500126_0658_AH7TLYBGX2/ | a
 			fileName=${file%__*}
 			fileName1=$(echo "$fileName" | tr -d "/")
 			fileName2=$(echo "$fileName1" | tr -d " ")
+			echo $fileName2
 		fi
 	done
 	for line in $(cat tCellList.csv); do
@@ -127,6 +130,7 @@ for dir in $(aws s3 ls s3://amaynard-bucket/170504_NS500126_0691_AHC22JBGX2/ | a
 			fileName=${file%__*}
 			fileName1=$(echo "$fileName" | tr -d "/")
 			fileName2=$(echo "$fileName1" | tr -d " ")
+			echo $fileName2
 		fi
 	done
 	for line in $(cat tCellList.csv); do
@@ -154,6 +158,7 @@ for dir in $(aws s3 ls s3://amaynard-bucket/170508_NS500126_0693_AHC2MFBGX2/ | a
 			fileName=${file%__*}
 			fileName1=$(echo "$fileName" | tr -d "/")
 			fileName2=$(echo "$fileName1" | tr -d " ")
+			echo $fileName2
 		fi
 	done
 	for line in $(cat tCellList.csv); do
@@ -181,6 +186,7 @@ for dir in $(aws s3 ls s3://amaynard-bucket/170510_NB501938_0003_AHM7KMBGX2/ | a
 			fileName=${file%__*}
 			fileName1=$(echo "$fileName" | tr -d "/")
 			fileName2=$(echo "$fileName1" | tr -d " ")
+			echo $fileName2
 		fi
 	done
 	for line in $(cat tCellList.csv); do
@@ -206,8 +212,9 @@ for dir in $(aws s3 ls s3://lincoln.harris-work/171120_A00111_0085_AH57YYDMXX/ |
 
 	dirName=$(echo "$dir" | tr -d "/")
 	dirName1=$(echo "$dirName" | tr -d " ")
+	echo $dirName1
 
-	for line in $(cat tCellList2.txt); do
+	for line in $(cat tCellList.txt); do
 
 		line1=$(echo "$line" | tr -d "\n")
 		line2=$(echo "$line1" | tr -d " ")
@@ -230,8 +237,9 @@ for dir in $(aws s3 ls s3://lincoln.harris-work/171120_A00111_0086_BH55NVDMXX/ |
 
 	dirName=$(echo "$dir" | tr -d "/")
 	dirName1=$(echo "$dirName" | tr -d " ")
+	echo $dirName1
 
-	for line in $(cat tCellList2.txt); do
+	for line in $(cat tCellList.txt); do
 
 		line1=$(echo "$line" | tr -d "\n")
 		line2=$(echo "$line1" | tr -d " ")
@@ -254,6 +262,7 @@ for dir in $(aws s3 ls s3://czbiohub-seqbot/fastqs/180226_A00111_0105_AH3KCHDSXX
 
 	dirName=$(echo "$dir" | tr -d "/")
 	dirName1=$(echo "$dirName" | tr -d " ")
+	echo $dirName1
 
 	for line in $(cat tCellList.csv); do
 
@@ -278,6 +287,7 @@ for dir in $(aws s3 ls s3://czbiohub-seqbot/fastqs/180307_A00111_0109_BH3KCJDSXX
 
 	dirName=$(echo "$dir" | tr -d "/")
 	dirName1=$(echo "$dirName" | tr -d " ")
+	echo $dirName1
 
 
 	for line in $(cat tCellList.csv); do
@@ -303,6 +313,7 @@ for dir in $(aws s3 ls s3://czbiohub-seqbot/fastqs/180319_A00111_0119_AH3JYJDSXX
 
 	dirName=$(echo "$dir" | tr -d "/")
 	dirName1=$(echo "$dirName" | tr -d " ")
+	echo $dirName1
 
 	for line in $(cat tCellList.csv); do
 
@@ -327,6 +338,7 @@ for dir in $(aws s3 ls s3://czbiohub-seqbot/fastqs/180320_NB501961_0086_AHLGLGBG
 
 	dirName=$(echo "$dir" | tr -d "/")
 	dirName1=$(echo "$dirName" | tr -d " ")
+	echo $dirName1
 
 	for line in $(cat tCellList.csv); do
 
@@ -351,6 +363,7 @@ for dir in $(aws s3 ls s3://czbiohub-seqbot/fastqs/180405_A00111_0129_BH3VFYDSXX
 
 	dirName=$(echo "$dir" | tr -d "/")
 	dirName1=$(echo "$dirName" | tr -d " ")
+	echo $dirName1
 
 	for line in $(cat tCellList.csv); do
 
@@ -375,6 +388,7 @@ for dir in $(aws s3 ls s3://czbiohub-seqbot/fastqs/180423_A00111_0141_AH3VFNDSXX
 
 	dirName=$(echo "$dir" | tr -d "/")
 	dirName1=$(echo "$dirName" | tr -d " ")
+	echo $dirName1
 
 	for line in $(cat tCellList.csv); do
 
