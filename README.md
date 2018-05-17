@@ -4,16 +4,16 @@
 `Author: Lincoln Harris`          
 `Date: May 2018`
 
-**TODO:** How to organize this repo? Do we want a single repo for all of 
+**_TODO:_** How to organize this repo? Do we want a single repo for all of 
 	  the utility scripts our group might use? Or separate repos for 
 	  each topic?          
-**TODO:** Better documentation of code, including description of the 
+**_TODO:_** Better documentation of code, including description of the 
 	  directory structure requried to run each script. Code should be 
 	  generalizable rather than specific to the tasks I've used them
 	  for.              
-**TODO:** What other scripts should we push up?           
+**_TODO:_** What other scripts should we push up?           
 
 
-**_PULL BEFORE YOU PUSH!!_**
+**_PULL BEFORE YOU PUSH!!_**     
 
-Also, be sure to add `README.md`s to whatever directories you initialize
+Also, be sure to add `README.md`s to whatever directories you initialize    
