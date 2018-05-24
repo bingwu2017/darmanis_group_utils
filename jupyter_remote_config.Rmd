@@ -14,8 +14,8 @@ output: html_document
 
 *2.* Install anaconda        
 	`bash Anaconda3-4.2.0-Linux-x86_64.sh`      
-	ENTER to confirm location        
-	'yes' to prepend install location to path       
+    ENTER to confirm location        
+    'yes' to prepend install location to path       
 
 *3.* Check that anaconda is in the preferred environment        
 	`which python` should return:         
@@ -71,8 +71,7 @@ output: html_document
 **if local port (8157) is busy:**         
 	check       
 	`lsof -ti:8157`         
-
-	kill process        
-	`lsof -ti:8157 | xargs kill -9`        
+	kill process           
+	`lsof -ti:8157 | xargs kill -9`      
 
 	you should be able to proceed as normal after this        
