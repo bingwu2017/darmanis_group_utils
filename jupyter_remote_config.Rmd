@@ -42,7 +42,7 @@ output: html_document
 	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`vi jupyter_notebook_config.py`      
 	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	add the following chunk:     
 
-	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`c = get_config()
+	`c = get_config()
 
 	# Kernel config
 	c.IPKernelApp.pylab = 'inline'  # if you want plotting support always in your notebook
@@ -73,5 +73,3 @@ output: html_document
 	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`lsof -ti:8157`         
 	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;kill process           
 	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`lsof -ti:8157 | xargs kill -9`  
-
-	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;you should be able to proceed as normal after this  
