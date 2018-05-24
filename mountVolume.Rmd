@@ -7,23 +7,23 @@ output: html_document
 
 *Instructions for how to mount an additional volume to an AMI*
 
-*1.* After volume has been attached via web console: 
-	list available block devices
-	`lsblk`
+*1.* After volume has been attached via web console:       
+	list available block devices        
+	`lsblk`         
 
-*2.* Check to see if volume is empty or not
-	`sudo file -s /dev/xvdf`
-	should return:
-		`/dev/xvdf: data`
+*2.* Check to see if volume is empty or not       
+	`sudo file -s /dev/xvdf`         
+	should return:        
+		`/dev/xvdf: data`        
 
-*3.* Format the volume's filesystem
-	`sudo mkfs -t ext4 /dev/xvdf`
+*3.* Format the volume's filesystem         
+	`sudo mkfs -t ext4 /dev/xvdf`        
 
-*4.* Make a new root directory to store volume
-	`sudo mkdir /myVolume`
+*4.* Make a new root directory to store volume      
+	`sudo mkdir /myVolume`      
 
-*5.* Mount the volume
-	`sudo mount /dev/xvdf /myVolume/`
+*5.* Mount the volume       
+	`sudo mount /dev/xvdf /myVolume/`       
 
-*6.* Display available space in new volume
-	`df -h /myVolume`
+*6.* Display available space in new volume        
+	`df -h /myVolume`         
