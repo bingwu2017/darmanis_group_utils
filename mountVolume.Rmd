@@ -14,16 +14,16 @@ output: html_document
 *2.* Check to see if volume is empty or not       
 	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`sudo file -s /dev/xvdf`         
 	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;should return:        
-	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`/dev/xvdf: data`        
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`/dev/xvdf: data`        
 
 *3.* Format the volume's filesystem         
-	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`sudo mkfs -t ext4 /dev/xvdf`        
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`sudo mkfs -t ext4 /dev/xvdf`        
 
 *4.* Make a new root directory to store volume      
-	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`sudo mkdir /myVolume`      
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`sudo mkdir /myVolume`      
 
 *5.* Mount the volume       
-	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`sudo mount /dev/xvdf /myVolume/`       
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`sudo mount /dev/xvdf /myVolume/`       
 
 *6.* Display available space in new volume        
-	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`df -h /myVolume`         
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`df -h /myVolume`         

@@ -10,37 +10,37 @@ output: html_document
 **If you are using a virtual machine that already has Jupyter Notebook, you can ignore steps 1-8**
 
 *1.* Dwld anaconda to the instance        
-	`wget https://repo.continuum.io/archive/Anaconda3-4.2.0-Linux-x86_64.sh`       
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`wget https://repo.continuum.io/archive/Anaconda3-4.2.0-Linux-x86_64.sh`       
 
 *2.* Install anaconda        
-	`bash Anaconda3-4.2.0-Linux-x86_64.sh`      
-    ENTER to confirm location        
-    'yes' to prepend install location to path       
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`bash Anaconda3-4.2.0-Linux-x86_64.sh`      
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ENTER to confirm location        
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'yes' to prepend install location to path       
 
 *3.* Check that anaconda is in the preferred environment        
-	`which python` should return:         
-	`/home/ubuntu/anaconda3/bin/python`       
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`which python` should return:         
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`/home/ubuntu/anaconda3/bin/python`       
 
 *4.* Create a password for jupyter notebook       
-	ipython:         
-	`from IPython.lib import passwd`        
-	`passwd()`        
-	*make sure to grab keypair!!*       
-	`exit`        
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ipython:         
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`from IPython.lib import passwd`        
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`passwd()`        
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*make sure to grab keypair!!*       
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`exit`        
 
 *5.* Create config profile       
-	`jupyter notebook --generate-config`       
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`jupyter notebook --generate-config`       
 
 *6.* Create certificates for https       
-	`mkdir jupyterCerts`       
-	`cd jupyterCerts`       
-	`sudo openssl req -x509 -nodes -days 365 -newkey rsa:1024 -keyout mycert.pem -out mycert.pem`      
-	answer questions     
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`mkdir jupyterCerts`       
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`cd jupyterCerts`       
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`sudo openssl req -x509 -nodes -days 365 -newkey rsa:1024 -keyout mycert.pem -out mycert.pem`      
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;answer questions     
 
 *7.* Configure jupyter     
-	`cd ~/.jupyter/`       
-	`vi jupyter_notebook_config.py`      
-		add the following chunk:     
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`cd ~/.jupyter/`       
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`vi jupyter_notebook_config.py`      
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	add the following chunk:     
 
 	`c = get_config()
 
@@ -58,20 +58,20 @@ output: html_document
 *8.* Exit ssh session      
 
 *9.* Login to new session with the following:          
-	`ssh -i /Users/lincoln.harris/AWS_config_and_installs/Lincoln.harris-1.pem -L 8157:127.0.0.1:8888 ubuntu@ec2-###-##-##-###.compute-1.amazonaws.com`        
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`ssh -i /Users/lincoln.harris/AWS_config_and_installs/Lincoln.harris-1.pem -L 8157:127.0.0.1:8888 ubuntu@ec2-###-##-##-###.compute-1.amazonaws.com`        
 
 *10.* Start the jupyter server          
-	`jupyter notebook`        
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`jupyter notebook`        
 
 *11.* Navigate to        
-	https://127.0.0.1:8157           
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;https://127.0.0.1:8157           
 
 *12.* Edit away!!        
  
 **if local port (8157) is busy:**         
-	check       
-	`lsof -ti:8157`         
-	kill process           
-	`lsof -ti:8157 | xargs kill -9`      
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;check       
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`lsof -ti:8157`         
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;kill process           
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`lsof -ti:8157 | xargs kill -9`    
 
-	you should be able to proceed as normal after this        
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;you should be able to proceed as normal after this        
