@@ -7,40 +7,40 @@ output: html_document
 
 *Instructions for how to run Jupyter Notebook from a virtual machine*  
 
-**If you are using a virtual machine that already has Jupyter Notebook, you can ignore steps 1-??**
+**If you are using a virtual machine that already has Jupyter Notebook, you can ignore steps 1-8**
 
-*1.* Dwld anaconda to the instance
-	`wget https://repo.continuum.io/archive/Anaconda3-4.2.0-Linux-x86_64.sh` 
+*1.* Dwld anaconda to the instance        
+	`wget https://repo.continuum.io/archive/Anaconda3-4.2.0-Linux-x86_64.sh`       
 
-*2.* Install anaconda
-	`bash Anaconda3-4.2.0-Linux-x86_64.sh`
-	ENTER to confirm location
-	'yes' to prepend install location to path
+*2.* Install anaconda        
+	`bash Anaconda3-4.2.0-Linux-x86_64.sh`      
+	ENTER to confirm location        
+	'yes' to prepend install location to path       
 
-*3.* Check that anaconda is in the preferred environment
-	`which python` should return: 
-	`/home/ubuntu/anaconda3/bin/python`
+*3.* Check that anaconda is in the preferred environment        
+	`which python` should return:         
+	`/home/ubuntu/anaconda3/bin/python`       
 
-*4.* Create a password for jupyter notebook
-	ipython:
-	`from IPython.lib import passwd`
-	`passwd()`
-	*make sure to grab keypair!!*
-	`exit`
+*4.* Create a password for jupyter notebook       
+	ipython:         
+	`from IPython.lib import passwd`        
+	`passwd()`        
+	*make sure to grab keypair!!*       
+	`exit`        
 
-*5.* Create config profile
-	`jupyter notebook --generate-config`
+*5.* Create config profile       
+	`jupyter notebook --generate-config`       
 
-*6.* Create certificates for https
-	`mkdir jupyterCerts`
-	`cd jupyterCerts`
-	`sudo openssl req -x509 -nodes -days 365 -newkey rsa:1024 -keyout mycert.pem -out mycert.pem`
-	answer questions
+*6.* Create certificates for https       
+	`mkdir jupyterCerts`       
+	`cd jupyterCerts`       
+	`sudo openssl req -x509 -nodes -days 365 -newkey rsa:1024 -keyout mycert.pem -out mycert.pem`      
+	answer questions     
 
-*7.* Configure jupyter
-	`cd ~/.jupyter/`
-	`vi jupyter_notebook_config.py`
-		add the following chunk: 
+*7.* Configure jupyter     
+	`cd ~/.jupyter/`       
+	`vi jupyter_notebook_config.py`      
+		add the following chunk:     
 
 	`c = get_config()
 
@@ -55,24 +55,24 @@ output: html_document
 	# Set the port to 8888, the port we set up in the AWS EC2 set-up
 	c.NotebookApp.port = 8888`
 
-*8.* Exit ssh session
+*8.* Exit ssh session      
 
-*9.* Login to new session with the following: 
-	`ssh -i /Users/lincoln.harris/AWS_config_and_installs/Lincoln.harris-1.pem -L 8157:127.0.0.1:8888 ubuntu@ec2-###-##-##-###.compute-1.amazonaws.com`
+*9.* Login to new session with the following:          
+	`ssh -i /Users/lincoln.harris/AWS_config_and_installs/Lincoln.harris-1.pem -L 8157:127.0.0.1:8888 ubuntu@ec2-###-##-##-###.compute-1.amazonaws.com`        
 
-*10.* Start the jupyter server
-	`jupyter notebook`
+*10.* Start the jupyter server          
+	`jupyter notebook`        
 
-*11.* Navigate to 
-	https://127.0.0.1:8157
+*11.* Navigate to        
+	https://127.0.0.1:8157           
 
-*12.* Edit away!!
+*12.* Edit away!!        
+ 
+**if local port (8157) is busy:**         
+	check       
+	`lsof -ti:8157`         
 
-**if local port (8157) is busy:** 
-	check
-	`lsof -ti:8157`
+	kill process        
+	`lsof -ti:8157 | xargs kill -9`        
 
-	kill process
-	`lsof -ti:8157 | xargs kill -9`
-
-	you should be able to proceed as normal after this 
+	you should be able to proceed as normal after this        
