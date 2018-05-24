@@ -8,8 +8,8 @@ output: html_document
 *Instructions for how to mount an additional volume to an AMI*
 
 *1.* After volume has been attached via web console:       
-	&nbsp;list available block devices        
-	&nbsp;`lsblk`         
+	&nbsp;&nbsp;&nbsp;&nbsp;list available block devices        
+	&nbsp;&nbsp;&nbsp;&nbsp;`lsblk`         
 
 *2.* Check to see if volume is empty or not       
 	`sudo file -s /dev/xvdf`         
