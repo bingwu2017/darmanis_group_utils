@@ -1,0 +1,317 @@
+---
+title: "GC comparison"
+output: html_notebook
+---
+
+#require necessary packages
+```{r}
+library(tidyverse)
+library(GGally)
+library(psych)
+library(data.table)
+library(ggridges)
+library(plyr)
+library(venn)
+```
+
+#read in gene count tables (rows= genes, columns=cell names)
+```{r}
+gc_nextera <- read.csv("~/Desktop/B003776_nextera_gc.csv")
+gc_1ng <- read.csv("~/Downloads/180608_NS500126_0799_AHKM7KBGX5_gene_cell_table.csv")
+gc_2ng <- read.csv("~/Downloads/180608_NB501938_0088_AHNFY2BGX5_gene_cell_table.csv")
+```
+#check for star alignment stats and remove
+```{r}
+dim(gc_nextera)
+dim(gc_1ng)
+dim(gc_2ng)
+
+(gc_1ng$gene)[grep("__", (gc_1ng$gene))]
+# Subset data 
+gc_1ng <- gc_1ng[-grep("__", (gc_1ng$gene)),]
+dim(gc_1ng)
+
+(gc_2ng$gene)[grep("__", (gc_2ng$gene))]
+# Subset data 
+gc_2ng <- gc_2ng[-grep("__", (gc_2ng$gene)),]
+dim(gc_2ng)
+```
+
+#rename cols
+```{r}
+colnames(gc_1ng)
+colname_1ng <- (do.call(rbind, strsplit(colnames(gc_1ng), "_")))
+colnames_1ng_temp <- apply(colname_1ng, 1, function(x) paste(x[1], x[2], x[3], sep = "_"))
+colnames(gc_1ng) <- colnames_1ng_temp
+#why are there 4733256 undetermined reads in the gc table for 1ng?
+
+colnames(gc_2ng)
+colname_2ng <- (do.call(rbind, strsplit(colnames(gc_2ng), "_")))
+colnames_2ng_temp <- apply(colname_2ng, 1, function(x) paste(x[1], x[2], x[3], sep = "_"))
+colnames(gc_2ng) <- colnames_2ng_temp
+#3744336 undetermined reads for 2ng
+
+colnames(gc_nextera)
+colname_nextera <- (do.call(rbind, strsplit(colnames(gc_nextera), "_")))
+colnames_nextera_temp <- apply(colname_nextera, 1, function(x) paste(x[1], x[2], "NXT", sep = "_"))
+colnames(gc_nextera) <- colnames_nextera_temp
+```
+
+delete the undetermined column
+```{r}
+dim(gc_1ng)
+#354 columns
+gc_1ng$Undetermined_S0.homo_Undetermined <- NULL
+dim(gc_1ng)
+#353 columns
+```
+
+delete the undetermined column
+```{r}
+dim(gc_2ng)
+#354 columns
+gc_2ng$Undetermined_S0.homo_Undetermined <- NULL
+dim(gc_2ng)
+#353 columns
+```
+
+combine all three gene count tables into combo_df
+```{r}
+rownames(gc_1ng) <- gc_1ng$gene_gene_gene
+gc_1ng$gene_gene_gene <- NULL
+rownames(gc_2ng) <- gc_2ng$gene_gene_gene
+gc_2ng$gene_gene_gene <- NULL
+rownames(gc_nextera) <- gc_nextera$X_X_NXT
+gc_nextera$X_X_NXT <- NULL
+
+combo_df <- cbind(gc_1ng, gc_2ng, gc_nextera)
+dim(combo_df)
+```
+
+basic stats
+```{r}
+combo_df1 <- as.data.frame(lapply(combo_df, as.numeric))
+rownames(combo_df1) <- row.names(combo_df)
+read_counts <- as.data.frame(colSums(combo_df1))
+gene_sums <- as.data.frame(rowSums(combo_df1))
+gene_counts <- as.data.frame(colSums(combo_df1!= 0))
+dim(gene_counts)
+dim(combo_df1)
+stats <- cbind(gene_counts, read_counts)
+colnames(stats) <- c('gene_count', 'read_count')
+temp4 <- do.call(rbind, strsplit(rownames(stats), "_", fixed=T))
+stats$condition <- temp4[,3]
+unique(stats$condition)
+write.csv(stats, "~/Desktop/Tn5_exp/stats.csv")
+
+#Split the combined data frame into condition data frames
+df_1ng <- combo_df1[ , (grep(pattern = '_1ng', x = colnames(combo_df1)))]
+df_2ng <- combo_df1[ , (grep(pattern = '_2ng', x = colnames(combo_df1)))]
+df_NXT <- combo_df1[ , (grep(pattern = '_NXT', x = colnames(combo_df1)))]
+
+#Find the number of cells that pass gene counts thresholds
+
+#exp.genes1 <- (apply(df_1ng, 2, function(x) length(which(x !=0))))
+#nopass_1ng <- which(exp.genes1 < 500)
+#pass_1ng <- which(exp.genes1 >= 500)
+length(pass_1ng)
+length(nopass_1ng)
+#exp.genes2 <- apply(df_2ng, 2, function(x) length(which(x !=0)))
+#nopass_2ng <- which(exp.genes2 < 500)
+#pass_2ng <- which(exp.genes2 >= 500)
+length(nopass_2ng)
+length(pass_2ng)
+#exp.genes3 <- apply(df_NXT, 2, function(x) length(which(x !=0)))
+#nopass_NXT <- which(exp.genes3 < 500)
+#pass_next <- which(exp.genes3 >= 500)
+length(nopass_NXT)
+length(pass_next)
+
+#distribution of gene counts by condition
+pdf("~/Desktop/Tn5_exp/gene_count_by_condition.pdf")
+ggplot(stats, aes(x = stats$gene_count, y=stats$condition, fill= stats$condition)) +
+  geom_density_ridges2(stat = "binline", bins = 30, scale = 0.95, draw_baseline = FALSE) + theme_ridges() + geom_vline(xintercept = 500) +xlab("gene count") + ylab("condition") + labs(fill="Condition") + labs(title = "Distribution of gene counts by Condition") + theme(plot.title = element_text(hjust=1))
+dev.off()
+
+#filter combined data frame by # reads and # genes
+read_counts1 <- colSums((combo_df1))
+gene_counts1 <- (colSums(combo_df1!= 0))
+combo_df_filtered = combo_df1[,(read_counts1>5000)] # can change read 
+combo_df_filtered <- combo_df1[,(gene_counts1>=500)]
+dim(combo_df1)
+dim(combo_df_filtered)
+
+```
+
+```{r}
+# generate a list of gc tables by condition
+conditions <- c("1ng", "2ng", "NXT") # modify based on experiment setup
+num_conditions <- length(conditions)
+gc_list <- vector("list", length = num_conditions)
+cellname_list <- vector("list", length = num_conditions)
+cellname_combo_list <- vector("list", length = num_conditions)
+for (i in 1:num_conditions) {
+  gc_list[[i]] = combo_df_filtered[,grep(conditions[i], colnames(combo_df_filtered))]
+  cellname_list[[i]] = do.call(rbind,strsplit(colnames(gc_list[[i]]), "_"))
+  cellname_combo_list[[i]] = apply(cellname_list[[i]], 1, function(x) paste(x[1], x[2], sep = "_"))
+}
+
+#create venn readable list inputs
+list_1 <- colnames(gc_list[[1]])
+list_1.1 <- do.call(rbind,strsplit(colnames(gc_list[[1]]), "_"))
+list_1 <- apply(cellname_list[[1]], 1, function(x) paste(x[1], x[2], sep = "_"))
+list_2 <- colnames(gc_list[[2]])
+list_2.1 <- do.call(rbind,strsplit(colnames(gc_list[[2]]), "_"))
+list_2 <- apply(cellname_list[[2]], 1, function(x) paste(x[1], x[2], sep = "_"))
+list_next <- colnames(gc_list[[3]])
+list_next.1 <- do.call(rbind,strsplit(colnames(gc_list[[3]]), "_"))
+list_next <- apply(cellname_list[[3]], 1, function(x) paste(x[1], x[2], sep = "_"))
+
+#make venn plot of genes shared by conditions
+venn.input <- list(list_1, list_2, list_next)
+pdf("~/Desktop/Tn5_exp/venn_cells.pdf")
+venn.diagram <- venn(venn.input, snames= c(A="1ng", "2ng", "NXT"), zcolor = c('blue', 'yellow', 'red'), ilabels = T)
+dev.off()
+
+#find cells at intersections of venn diagram
+setdiff(list_1, list_next) #in 1ng not in nextera = "D21_B003776" "E12_B003776" "F2_B003776"  "J11_B003776"
+setdiff(list_1, list_2) #in 1ng not in 2ng = "B14_B003776"
+setdiff(list_2, list_next) #"in 2ng not in next = D21_B003776" "E12_B003776" "F2_B003776"  "J11_B003776" "L19_B003776" "P8_B003776" 
+setdiff(list_next, list_2) # in nextera not in 2ng = [1] "B14_B003776" "I11_B003776" "I22_B003776" "I3_B003776"  "I4_B003776"  "I5_B003776"  "I7_B003776" 
+setdiff(list_next, list_1) # in nextera not in 1ng = [1] "I11_B003776" "I22_B003776" "I3_B003776"  "I4_B003776"  "I5_B003776"  "I7_B003776" 
+common_cells_all_conditions <- Reduce(intersect, list(list_1,list_2,list_next))
+
+common_cells <- paste(Reduce(intersect, cellname_combo_list), collapse = "|")
+num_cells <- length(Reduce(intersect, cellname_combo_list))
+gc_list = lapply(gc_list, function(x) x[,grep(common_cells, colnames(x))])
+
+# determine avg read counts
+median_read_counts <- sapply(gc_list, function(x) median(colSums(x)))
+mean_read_counts <- sapply(gc_list, function(x) mean(colSums(x)))
+
+# normalize gc tables by total reads
+gc_list_norm <- lapply(gc_list, function(x) as.data.frame(apply(x, 2, function(y) (y*1000000/sum(y)+1))))
+gc_list_normlog <- lapply(gc_list, function(x) as.data.frame(apply(x, 2, function(y) log2((y*1000000/sum(y)+1)))))
+```
+
+```{r}
+# Correlation Calculation
+# generate correlation dataframe (conditions, correlation, tissue type) with cells present in all conditions
+cor_NXT <- lapply(gc_list_normlog, function(x) diag(cor(x,gc_list_norm[[3]], method = "spearman"))) # change 3 depending on what you want to correlate to
+
+df_cor <- as.data.frame(matrix(ncol = 2, nrow = num_cells*num_conditions))
+colnames(df_cor) = c("condition", "correlation")
+common_cells_int = as.integer(Reduce(intersect,cellname_combo_list))
+for (i in 1:num_conditions) {
+  cell_range = ((i-1)*num_cells+1):(i*num_cells)
+  df_cor[cell_range,1] = rep(conditions[i], num_cells)
+  df_cor[cell_range,2] = cor_NXT[[i]]
+}
+
+#filter correlation data frame by condition and compare stats (min, mean, max) for each condition
+cor_1ng <- filter(df_cor, condition=='1ng')
+cor_2ng <- filter(df_cor, condition=='2ng')
+cor_next <- filter(df_cor, condition=='NXT')
+
+min(cor_1ng[ ,2])
+mean(cor_1ng[ ,2])
+max(cor_1ng[ ,2])
+
+min(cor_2ng[ ,2])
+mean(cor_2ng[ ,2])
+max(cor_2ng[ ,2])
+
+min(cor_next[ ,2])
+mean(cor_next[ ,2])
+max(cor_next[ ,2])
+```
+
+
+```{r}
+# Plots Spearman Correlation
+df_nonext <- filter(df_cor, condition == '2ng' | condition == '1ng')
+df_1ng <- filter(df_cor, condition == '1ng')
+dim(df_1ng)
+df_2ng <- filter(df_cor, condition == '2ng')
+dim(df_2ng)
+
+#pdf("~/Desktop/Tn5_exp/Spear_corr.pdf")
+ggplot(df_cor, aes(x = correlation, y = condition, fill=condition)) +
+  geom_density_ridges() +
+  scale_x_continuous(limits = c(0.65, 1.03)) +
+  labs(title = "Correlation by Condition")
+
+ggplot(df_cor, aes(x = correlation, y = condition, fill=condition)) +
+  geom_density_ridges(stat = "binline", bins = 30, scale = 0.95, draw_baseline = FALSE) +
+  labs(title = "Correlation by Condition and Tissue Type")
+
+ggplot(df_cor, aes(x = correlation, fill=condition)) +
+  geom_histogram(bins=20) +
+  labs(title = "Correlation by Condition")
+
+ggplot(df_nonext, aes(x = correlation, fill=condition)) +
+  geom_histogram(bins=50, alpha =.7) +
+  labs(title = "Correlation by Condition")
+
+ggplot(df_nonext, aes(x = correlation, y=condition, fill=condition)) +
+  geom_density_ridges2()+
+  labs(title = "Correlation by Condition")
+
+ggplot(df_nonext, aes(x = correlation, y=condition, fill=condition)) +
+  geom_density_ridges2(stat = "binline", bins = 30, scale = 0.95, draw_baseline = FALSE) +
+  labs(title = "Correlation by Condition")
+#dev.off()
+```
+
+*DID NOT EDIT THIS PART OF THE CODE*
+```{r}
+# make gene expression plots
+for (i in 1:length(gc_list_normlog)) {
+  ge_pathname = file.path(cwd, conditions[i])
+  }
+  for (j in 1:ncol(gc_list_normlog[[i]])) {
+    ge_df = as.data.frame(cbind(gc_list_normlog[[3]][15], gc_list_normlog[[3]][15])) # change 3 to condition you're comparing to
+    colnames(ge_df) = c("expt", "NXT") # modify accordingly
+    
+    ge_filename = paste(conditions[i], "_", common_cells_int[j], ".png", sep = "")
+    bounds = predict(lm(NXT ~ expt, data = ge_df), interval = "confidence", level = 0.95)
+    ge_plot = ggplot(data = ge_df, aes(x = expt, y = NXT)) + 
+      geom_point() +
+      geom_line(aes(y = bounds[,2]), color = "red", linetype = "dashed") +
+      geom_line(aes(y = bounds[,3]), color = "red", linetype = "dashed") +
+      geom_smooth(method = "lm", se = TRUE) +
+      labs(title = paste(conditions[3], "vs. NXT Cell", common_cells_int[j], "Log 2 Gene Expression", sep = " "))
+    ggsave(filename = file.path(ge_pathname, ge_filename))
+  }
+   ge_df = as.data.frame(cbind(gc_list_normlog[[2]][15], gc_list_normlog[[3]][15])) # change 3 to condition you're comparing to
+    colnames(ge_df) = c("expt", "NXT") # modify accordingly
+    
+    bounds = predict(lm(NXT ~ expt, data = ge_df), interval = "confidence", level = 0.95)
+    ge_plot2 = ggplot(data = ge_df, aes(x = expt, y = NXT)) + 
+      geom_point() +
+      geom_line(aes(y = bounds[,2]), color = "red", linetype = "dashed") +
+      geom_line(aes(y = bounds[,3]), color = "red", linetype = "dashed") +
+      geom_smooth(method = "lm", se = TRUE) +
+      labs(title = paste(conditions[2], "vs. NXT Cell", common_cells_int[j], "Log 2 Gene Expression", sep = " "))
+
+   ge_df = as.data.frame(cbind(gc_list_normlog[[1]][15], gc_list_normlog[[3]][15])) # change 3 to condition you're comparing to
+    colnames(ge_df) = c("expt", "NXT") # modify accordingly
+    
+    bounds = predict(lm(NXT ~ expt, data = ge_df), interval = "confidence", level = 0.95)
+    ge_plot3 = ggplot(data = ge_df, aes(x = expt, y = NXT)) + 
+      geom_point() +
+      geom_line(aes(y = bounds[,2]), color = "red", linetype = "dashed") +
+      geom_line(aes(y = bounds[,3]), color = "red", linetype = "dashed") +
+      geom_smooth(method = "lm", se = TRUE) +
+      labs(title = paste(conditions[1], "vs. NXT Cell", common_cells_int[j], "Log 2 Gene Expression", sep = " "))
+
+   ge_df = as.data.frame(cbind(gc_list_normlog[[1]][15], gc_list_normlog[[2]][15])) # change 3 to condition you're comparing to
+    colnames(ge_df) = c("expt", "NXT") # modify accordingly
+    
+    bounds = predict(lm(NXT ~ expt, data = ge_df), interval = "confidence", level = 0.95)
+    ge_plot4 = ggplot(data = ge_df, aes(x = expt, y = NXT)) + 
+      geom_point() +
+      geom_smooth(method = "lm") +
+      labs(title = paste(conditions[1], "vs.", conditions[2], "Log 2 Gene Expression", sep = " "))
+
+```
