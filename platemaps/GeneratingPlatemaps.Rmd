@@ -1,0 +1,100 @@
+---
+title: "Generating Platemaps"
+output: html_document
+---
+
+##Install 'platetools'
+```{r}
+install.packages('platetools')
+```
+
+##Require libraries
+```{r}
+library(platetools)
+library(ggplot2)
+library(viridis)
+```
+
+
+##Read in dataframe (example: stats.csv)
+```{r}
+read.csv("~/Desktop/Tn5_exp/stats.csv", header = T, row.names = 1)
+head(stats)
+dim(stats)
+
+#Create a column for cell.ids
+stats$cell_id <- rownames(stats)
+
+#filter stats into condition dfs (filter will drop rownames, cell.ids have been preserved by assigning a column shown above)
+stats_1ng <- filter(stats, condition=='1ng')
+dim(stats_1ng)
+
+stats_2ng <- filter(stats, condition=='2ng')
+dim(stats_2ng)
+
+stats_nxt <- filter(stats, condition=='NXT')
+dim(stats_nxt)
+
+#split cell.id to well and plate
+temp_1ng <- do.call(rbind, strsplit(stats_1ng$cell_id, "_", fixed=T))
+stats_1ng$well <- temp_1ng[,1]
+
+temp_1ng <- do.call(rbind, strsplit(stats_1ng$cell_id, "_", fixed=T))
+stats_1ng$well <- temp_1ng[,1]
+
+temp_2ng <- do.call(rbind, strsplit(stats_2ng$cell_id, "_", fixed=T))
+stats_2ng$well <- temp_2ng[,1]
+
+temp_nextera <- do.call(rbind, strsplit(stats_nxt$cell_id, "_", fixed=T))
+stats_nxt$well <- temp_nextera[,1]
+```
+
+##Make platemap: 1ng plate gene counts
+```{r}
+raw_map(data = stats_1ng$gene_count,
+        well = stats_1ng$well,
+        plate = 384)
+#pdf("~/Desktop/Tn5_exp/1ngGCmap.pdf")
+raw_map(data = stats_1ng$gene_count,
+        well = stats_1ng$well,
+        plate = 384) + 
+    ggtitle("1ng Gene Counts") + 
+    theme_dark() +
+    scale_fill_viridis()
+#dev.off()
+```
+
+
+##Make platemap: 2ng gene counts
+```{r}
+raw_map(data = stats_2ng$gene_count,
+        well = stats_2ng$well,
+        plate = 384)
+
+#pdf("~/Desktop/Tn5_exp/2ngGCmap.pdf")
+raw_map(data = stats_2ng$gene_count,
+        well = stats_2ng$well,
+        plate = 384) + 
+    ggtitle("2ng Gene Counts") + 
+    theme_dark() +
+    scale_fill_viridis()
+#dev.off()
+```
+
+##Make platemap: nextera gene counts
+```{r}
+raw_map(data = stats_nxt$gene_count,
+        well = stats_nxt$well,
+        plate = 384)
+
+#pdf("~/Desktop/Tn5_exp/nxtGCmap.pdf")
+raw_map(data = stats_nxt$gene_count,
+        well = stats_nxt$well,
+        plate = 384) + 
+    ggtitle("Nextera Gene Counts") + 
+    theme_dark() +
+    scale_fill_viridis()
+#dev.off()
+```
+
+
