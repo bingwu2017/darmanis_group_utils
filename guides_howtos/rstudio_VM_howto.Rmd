@@ -14,17 +14,19 @@ output: html_document
     2. Select *Launch Instance*       
     3. Select *Community AMIs* from the left most panel
     4. In the search bar, enter *rstudio julia*
-    5. Select the AMI you want to spin up (I usually go with *RStudio-1.0.153_R-3.4.1_Julia-0.6.0_ubuntu-16.04-LTS-64bit*)
-    6. Choose the instance type you want (I generally go with m4.4xlarge when I have to do any serious computation)
-        Review & Launch
+    5. Select the AMI you want to spin up      
+          (I usually go with *RStudio-1.0.153_R-3.4.1_Julia-0.6.0_ubuntu-16.04-LTS-64bit*)
+    6. Choose the instance type you want        
+          (I generally go with m4.4xlarge when I have to do any serious computation) 
+          *Review & Launch*
     7. Once on the next screen, select *Edit security groups*
     8. Click *Select an existing security group*
-    9. Scroll down until you find *lincoln-rstudio*
-        Review & Launch
+    9. Scroll down until you find *lincoln-rstudio*    
+          *Review & Launch*
     10. Select *Launch*
-    11. Select your key-pair from the drop down menu
-        Launch Instances
-    12. From the green dialog box, click on your instance and be sure to give it a descriptive name
+    11. Select your key-pair from the drop down menu       
+          *Launch Instances*
+    12. From the green dialog box, click on your instance and be sure to give it a descriptive name          
     Your instance is now spinning up. As soon as you see *2/2 checks* in the **Status Checks** column you'll be ready to work with it
     13. With you instance selected, grab the *IPv4 Public IP* and paste it into your browser
     14. Sign in -- Default user name and password are both 'rstudio'
@@ -72,6 +74,6 @@ logout
 ```
 (sometimes need to enter this twice)
 
-Back in the console, ctrl-click the instance name, and select *stop*  
+Back in the console, *ctrl-click* the instance name, and select *stop*  
 Selecting *stop* allows you to shut down the VM without killing it, which means you'll preserve whatever data you've pushed up there and any system modifications you've made. 
 
