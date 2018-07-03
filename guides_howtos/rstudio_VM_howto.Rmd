@@ -74,6 +74,9 @@ logout
 ```
 (sometimes need to enter this twice)
 
-Back in the console, *ctrl-click* the instance name, and select *stop*  
+Back in the console, *ctrl-click* the instance name, and select *stop* 
+
 Selecting *stop* allows you to shut down the VM without killing it, which means you'll preserve whatever data you've pushed up there and any system modifications you've made. 
+
+Also keep in mind that once you've stopped an instance, you can change the instance type. **This allows you to spin up something bigger without recreating the instance or repushing your data!!**
 
