@@ -29,7 +29,7 @@ output: html_document
     12. From the green dialog box, click on your instance and be sure to give it a descriptive name          
     Your instance is now spinning up. As soon as you see *2/2 checks* in the **Status Checks** column you'll be ready to work with it
     13. With you instance selected, grab the *IPv4 Public IP* and paste it into your browser
-    14. Sign in -- Default user name and password are both 'rstudio'
+    14. Sign in -- Default user name and password are both *rstudio*
     15. Follow the prompt in selecting a more secure password. You are now ready to work on your virtual Rstudio server!
 
 ## Push up your data
