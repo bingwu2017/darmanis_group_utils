@@ -1,0 +1,81 @@
+---
+title: "plotSortingMetaData"
+output: html_document
+---
+####This Rmd script takes the FACS metadata and use ggplot to visulize them. The metadata can also be merged with sequencing data by cell names (containing plate and index information) to visulize gene expression or seurat cluster identity on the same plot with FACS measurements.
+
+```{r}
+library(Seurat)
+library(dplyr)
+library(Matrix)
+```
+
+#####First we will read the metadata exported from SONY, and the seurat object
+
+```{r}
+B003935<-read.csv(file="Trachea_B003935.csv",header=TRUE,sep=",",stringsAsFactors = F)
+load("seurat_Trachea_May.RData")
+```
+
+###### This is what it looks like:
+```{r}
+head(B003935)
+```
+
+######If you export the whole giant metadata table including all events (in and out of sorting gates), and you want to remove the events that did not get into wells (aka the events that don't have any value in the "Index" column), you may do this:
+
+```{r}
+B003935_sort<-B003935[B003935$Index!="",]
+head(B003935_sort)
+```
+
+###### now we end up with data of only 352 cells (22 columns) sorted.
+######add plate# into sorting metadata 
+```{r}
+B003935_sort$plate<-rep("B003935",352)
+#352 is the number of cells in the metadata.
+```
+
+##### we can use the plate# and index in the names of cells in sequencing data to link to their sorting metadata:
+######First let's extract plate and index information from sequencing data
+```{r}
+cell_name<-read.table(text=names(seuTrachea_May@ident),sep="_",colClasses = "character")
+colnames(cell_name)<-c("plate","well","tissue","other") # depends on what your cell names look like. My cell names are of this format.
+head(cell_name)
+```
+
+
+###### We can also extract expression levels of genes. 
+```{r}
+Tdtomato<-seuTrachea_May@data[which(rownames(seuTrachea_May@data)=="Tdtom_transgene"),]
+Gfp<-seuTrachea_May@data[which(rownames(seuTrachea_May@data)=="Gfp_transgene"),]
+```
+
+######Now we can make a dataframe that has the plate #, index#, seurat cluster identity, and expression levels of some genes
+```{r}
+cluster_cell<-cbind(cell_name[,1:2],seuTrachea_May@ident,Tdtomato,Gfp)
+colnames(cluster_cell)<-c("plate","Index","identity","Tdtom_transgene","Gfp_transgene")
+head(cluster_cell)
+```
+
+##### now we can join the above dataframe with FACS metadata.
+```{r}
+join_B003935<-left_join(B003935_sort,cluster_cell)
+```
+
+##### now we can plot metadata for all cells and color code them based on cluster identities:
+
+###### if you only want to see one column of metadata (Hoechst signal for example):
+```{r}
+ggplot(join_B003935,aes(x=log10(Hoechst.33342.A.Compensated)))+geom_density(aes(color=identity))
+```
+
+###### if you want to see Hoechst on x axis, and GFP on y axis:
+```{r}
+ggplot(join_B003935,aes(x=log10(Hoechst.33342.A.Compensated),y=log10(EGFP.A.Compensated)))+geom_point(aes(color=identity))
+```
+
+######If you want to color code cells by mRNA levels instead of cluster identities:
+```{r}
+ggplot(join_B003935,aes(x=log10(EGFP.A.Compensated),y=log10(tdTomato.A.Compensated),color=Gfp_transgene))+geom_point(size=0.3)+scale_color_continuous(low="yellow",high="red")
+```
