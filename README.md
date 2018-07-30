@@ -1,8 +1,7 @@
 
 ## Darmanis_group_utils         
 
-`Author: Lincoln Harris`          
-`Date: May 2018`
+`CZ Biohub, May 2018`
 
 This is an active repo for code used for scRNA-seq analysis within the Darmanis
 group at the Biohub. The goal is to set up separate folders for each project and
