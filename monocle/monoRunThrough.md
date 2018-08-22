@@ -3,9 +3,6 @@ monoRunThrough
 Lincoln Harris
 2.13.18
 
-Monocle Run Through
-===================
-
 **This is an example workbook for running Monocle for trajectory inference from single-cell RNA-seq data**
 
 *I ran this on some lung neuroendocrine cells, hence the NE names associated with everything*
@@ -276,28 +273,75 @@ plot_complex_cell_trajectory(cds_NE, color_by = 'age', cell_size = 0.5, cell_lin
 *BEAM (Branched Expression Analysis Modeling)* finds genes that drive the branching event at the specified branch point.
 
 ``` r
-#all_BEAM1 <- BEAM(cds_NE, branch_point = 1)
-#all_BEAM1 <- all_BEAM1[order(all_BEAM1$qval),]
+all_BEAM1 <- BEAM(cds_NE, branch_point = 1)
+```
+
+    ## Warning in if (progenitor_method == "duplicate") {: the condition has
+    ## length > 1 and only the first element will be used
+
+    ## Warning in if (progenitor_method == "sequential_split") {: the condition
+    ## has length > 1 and only the first element will be used
+
+    ## Warning in newCellDataSet(as.matrix(exprs_data), phenoData =
+    ## new("AnnotatedDataFrame", : Warning: featureData must contain a column
+    ## verbatim named 'gene_short_name' for certain functions
+
+    ## Warning in newCellDataSet(as.matrix(exprs_data), phenoData =
+    ## new("AnnotatedDataFrame", : Warning: featureData must contain a column
+    ## verbatim named 'gene_short_name' for certain functions
+
+    ## Warning in newCellDataSet(as.matrix(exprs_data), phenoData =
+    ## new("AnnotatedDataFrame", : Warning: featureData must contain a column
+    ## verbatim named 'gene_short_name' for certain functions
+
+``` r
+all_BEAM1 <- all_BEAM1[order(all_BEAM1$qval),]
 ```
 
 ....and plot
 
 ``` r
-#plot_genes_branched_heatmap(cds_NE[row.names(subset(all_BEAM1, qval < 1e-20)),], branch_point = 1, cluster_rows = T, show_rownames = T)
+plot_genes_branched_heatmap(cds_NE[row.names(subset(all_BEAM1, qval < 1e-20)),], branch_point = 1, cluster_rows = T, show_rownames = T)
 ```
+
+    ## Warning in newCellDataSet(as.matrix(exprs_data), phenoData =
+    ## new("AnnotatedDataFrame", : Warning: featureData must contain a column
+    ## verbatim named 'gene_short_name' for certain functions
+
+    ## Warning in newCellDataSet(as.matrix(exprs_data), phenoData =
+    ## new("AnnotatedDataFrame", : Warning: featureData must contain a column
+    ## verbatim named 'gene_short_name' for certain functions
+
+    ## Warning in newCellDataSet(as.matrix(exprs_data), phenoData =
+    ## new("AnnotatedDataFrame", : Warning: featureData must contain a column
+    ## verbatim named 'gene_short_name' for certain functions
+
+![](monoRunThrough_files/figure-markdown_github/unnamed-chunk-19-1.png)
 
 Sorting BEAM genes so that we're only grabbing the ones with the highest qval that are expressed in &gt;100 cells. Call this 'sub\_BEAM'
 
 ``` r
-#dim(all_BEAM1)
+dim(all_BEAM1)
+```
 
-#all_BEAM1_order <- all_BEAM1[order(all_BEAM1$qval),]
-#dim(all_BEAM1_order)
+    ## [1] 17343     6
 
-#sub_BEAM1 <- all_BEAM1_order[1:100,]
-#sub_BEAM1 <- sub_BEAM1[row.names(subset(sub_BEAM1, num_cells_expressed > 100)),]
-#dim(sub_BEAM1)
+``` r
+all_BEAM1_order <- all_BEAM1[order(all_BEAM1$qval),]
+dim(all_BEAM1_order)
+```
 
+    ## [1] 17343     6
+
+``` r
+sub_BEAM1 <- all_BEAM1_order[1:100,]
+sub_BEAM1 <- sub_BEAM1[row.names(subset(sub_BEAM1, num_cells_expressed > 100)),]
+dim(sub_BEAM1)
+```
+
+    ## [1] 63  6
+
+``` r
 #write.csv(sub_BEAM1, file = "sub_BEAM1.csv")
 ```
 
@@ -306,13 +350,15 @@ Sorting BEAM genes so that we're only grabbing the ones with the highest qval th
 First find diff. expressed genes
 
 ``` r
-#diff_NE <- differentialGeneTest(cds_NE[all_NE_expressed_genes,], fullModelFormulaStr = "~sm.ns(Pseudotime)")
+diff_NE <- differentialGeneTest(cds_NE[all_NE_expressed_genes,], fullModelFormulaStr = "~sm.ns(Pseudotime)")
 
-#sig_gene_names <- row.names(subset(diff_NE, qval < 1e-45))
+sig_gene_names <- row.names(subset(diff_NE, qval < 1e-45))
 ```
 
 Now plot
 
 ``` r
-#plot_pseudotime_heatmap(cds_NE[sig_gene_names,], show_rownames = T)
+plot_pseudotime_heatmap(cds_NE[sig_gene_names,], show_rownames = T)
 ```
+
+![](monoRunThrough_files/figure-markdown_github/unnamed-chunk-22-1.png)
