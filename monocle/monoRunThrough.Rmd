@@ -94,7 +94,7 @@ plot_cell_clusters(cds_NE)
 
 Differential gene expression test
 ```{r}
-clustering_DEG_genes_NE <- differentialGeneTest(cds_NE[all_NE_expressed_genes,], fullModelFormulaStr = '~Cluster', cores = 10)
+clustering_DEG_genes_NE <- differentialGeneTest(cds_NE[all_NE_expressed_genes,], fullModelFormulaStr = '~Cluster')
 ```
 
 Select top 1000 genes
@@ -129,10 +129,10 @@ plot_complex_cell_trajectory(cds_NE, color_by = 'age', cell_size = 0.5, cell_lin
 
 ### BEAM Analysis
 
-Lets see if we can do some branch analysis        
-    *BEAM (Branched Expression Analysis Modeling)* finds genes that drive the branching event at the specified branch point.
+     
+*BEAM (Branched Expression Analysis Modeling)* finds genes that drive the branching event at the specified branch point.
 ```{r}
-all_BEAM1 <- BEAM(cds_NE, branch_point = 1, cores = 10)
+all_BEAM1 <- BEAM(cds_NE, branch_point = 1)
 all_BEAM1 <- all_BEAM1[order(all_BEAM1$qval),]
 ```
 
@@ -152,7 +152,7 @@ sub_BEAM1 <- all_BEAM1_order[1:100,]
 sub_BEAM1 <- sub_BEAM1[row.names(subset(sub_BEAM1, num_cells_expressed > 100)),]
 dim(sub_BEAM1)
 
-write.csv(sub_BEAM1, file = "sub_BEAM1.csv")
+#write.csv(sub_BEAM1, file = "sub_BEAM1.csv")
 ```
 
 
@@ -160,7 +160,7 @@ write.csv(sub_BEAM1, file = "sub_BEAM1.csv")
 
 First find diff. expressed genes
 ```{r}
-diff_NE <- differentialGeneTest(cds_NE[all_NE_expressed_genes,], fullModelFormulaStr = "~sm.ns(Pseudotime)", cores = 10)
+diff_NE <- differentialGeneTest(cds_NE[all_NE_expressed_genes,], fullModelFormulaStr = "~sm.ns(Pseudotime)")
 
 sig_gene_names <- row.names(subset(diff_NE, qval < 1e-45))
 ```
