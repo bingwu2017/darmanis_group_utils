@@ -9,7 +9,7 @@ output: github_document
 
 *I ran this on some lung neuroendocrine cells, hence the NE names associated with everything*            
 
-*A more detailed description of all of the steps demonstrated here can be found at:*                   http://cole-trapnell-lab.github.io/monocle-release/docs/ 
+*A more detailed description of all of the steps demonstrated here can be found at:*                                            http://cole-trapnell-lab.github.io/monocle-release/docs/  
 
 
 ### Loading Data
