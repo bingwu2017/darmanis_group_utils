@@ -4,7 +4,7 @@ author: Lincoln Harris
 date: 2.13.18
 ---
 # Monocle Run Through 
-**This is an example workbook for running Monocle for trajectory inference from single-cell RNA-seq data**
+**This is an example workbook for running Monocle for trajectory inference from single-cell RNA-seq data**           
 *A more detailed description of all of the steps demonstrated here can be found at* http://cole-trapnell-lab.github.io/monocle-release/docs/ 
 
 
@@ -114,12 +114,12 @@ plot_cell_trajectory(cds_NE, color_by = "Cluster")
 
 A different way of plotting trajectories
 ```{r}
-** most basic case**
+# most basic case
 plot_complex_cell_trajectory(cds_NE, color_by = 'Cluster')
 plot_complex_cell_trajectory(cds_NE, color_by = 'State')
 plot_complex_cell_trajectory(cds_NE, color_by = 'age')
 
-** a bit more complicated**
+# a bit more complicated
 plot_complex_cell_trajectory(cds_NE, color_by = 'age', cell_size = 0.5, cell_link_size = 0.3) + scale_size(range = c(0.2, 0.2))
 ```
 
