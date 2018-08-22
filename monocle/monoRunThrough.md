@@ -2,7 +2,7 @@
 title: "monoRunThrough"
 author: "Lincoln Harris"
 date: "2.13.18"
-output: html
+output: html_document
 ---
 # Monocle Run Through 
 **This is an example workbook for running Monocle for trajectory inference from single-cell RNA-seq data**    
