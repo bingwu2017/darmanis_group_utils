@@ -1,15 +1,15 @@
 ---
 title: "monoRunThrough"
-author: "Lincoln Harris"
-date: "2.13.18"
-output: rmarkdown::github_document
+author: Lincoln Harris
+date: 2.13.18
+output: github_document
 ---
 # Monocle Run Through 
 **This is an example workbook for running Monocle for trajectory inference from single-cell RNA-seq data**    
 
 *I ran this on some lung neuroendocrine cells, hence the NE names associated with everything*            
 
-*A more detailed description of all of the steps demonstrated here can be found at:*           http://cole-trapnell-lab.github.io/monocle-release/docs/ 
+*A more detailed description of all of the steps demonstrated here can be found at:*                   http://cole-trapnell-lab.github.io/monocle-release/docs/ 
 
 
 ### Loading Data
