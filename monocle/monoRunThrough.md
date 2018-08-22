@@ -5,8 +5,6 @@ Lincoln Harris
 
 **This is an example workbook for running Monocle for trajectory inference from single-cell RNA-seq data**
 
-*I ran this on some lung neuroendocrine cells, hence the NE names associated with everything*
-
 *A more detailed description of all of the steps demonstrated here can be found at:* <http://cole-trapnell-lab.github.io/monocle-release/docs/>
 
 ### Loading Data
@@ -16,63 +14,6 @@ Load library
 ``` r
 library(monocle)
 ```
-
-    ## Warning: package 'monocle' was built under R version 3.4.4
-
-    ## Loading required package: Matrix
-
-    ## Warning: package 'Matrix' was built under R version 3.4.4
-
-    ## Loading required package: Biobase
-
-    ## Loading required package: BiocGenerics
-
-    ## Loading required package: parallel
-
-    ## 
-    ## Attaching package: 'BiocGenerics'
-
-    ## The following objects are masked from 'package:parallel':
-    ## 
-    ##     clusterApply, clusterApplyLB, clusterCall, clusterEvalQ,
-    ##     clusterExport, clusterMap, parApply, parCapply, parLapply,
-    ##     parLapplyLB, parRapply, parSapply, parSapplyLB
-
-    ## The following objects are masked from 'package:Matrix':
-    ## 
-    ##     colMeans, colSums, rowMeans, rowSums, which
-
-    ## The following objects are masked from 'package:stats':
-    ## 
-    ##     IQR, mad, sd, var, xtabs
-
-    ## The following objects are masked from 'package:base':
-    ## 
-    ##     anyDuplicated, append, as.data.frame, cbind, colMeans,
-    ##     colnames, colSums, do.call, duplicated, eval, evalq, Filter,
-    ##     Find, get, grep, grepl, intersect, is.unsorted, lapply,
-    ##     lengths, Map, mapply, match, mget, order, paste, pmax,
-    ##     pmax.int, pmin, pmin.int, Position, rank, rbind, Reduce,
-    ##     rowMeans, rownames, rowSums, sapply, setdiff, sort, table,
-    ##     tapply, union, unique, unsplit, which, which.max, which.min
-
-    ## Welcome to Bioconductor
-    ## 
-    ##     Vignettes contain introductory material; view with
-    ##     'browseVignettes()'. To cite Bioconductor, see
-    ##     'citation("Biobase")', and for packages 'citation("pkgname")'.
-
-    ## Loading required package: ggplot2
-
-    ## Loading required package: VGAM
-
-    ## Loading required package: stats4
-
-    ## Loading required package: splines
-
-    ## Loading required package: DDRTree
-
-    ## Loading required package: irlba
 
 Load data frames
 
@@ -90,15 +31,8 @@ Sanity check
 
 ``` r
 dim(raw_data)
-```
-
-    ## [1] 17343   645
-
-``` r
 dim(meta_data)
 ```
-
-    ## [1] 645   4
 
 Create annotated data frame from meta\_data
 
@@ -112,26 +46,12 @@ Create CellDataSet object
 cds_NE <- newCellDataSet(cellData = as.matrix(raw_data), phenoData = meta_data_anno, featureData = NULL, expressionFamily = negbinomial.size())
 ```
 
-    ## Warning in newCellDataSet(cellData = as.matrix(raw_data), phenoData =
-    ## meta_data_anno, : Warning: featureData must contain a column verbatim named
-    ## 'gene_short_name' for certain functions
-
-    ## Warning in newCellDataSet(cellData = as.matrix(raw_data), phenoData =
-    ## meta_data_anno, : Warning: featureData must contain a column verbatim named
-    ## 'gene_short_name' for certain functions
-
-    ## Warning in newCellDataSet(cellData = as.matrix(raw_data), phenoData =
-    ## meta_data_anno, : Warning: featureData must contain a column verbatim named
-    ## 'gene_short_name' for certain functions
-
 Estimate size and dispersion
 
 ``` r
 cds_NE <- estimateSizeFactors(cds_NE)
 cds_NE <- estimateDispersions(cds_NE)
 ```
-
-    ## Removing 249 outliers
 
 ### Constructing single-cell trajectories
 
@@ -161,10 +81,6 @@ Run dimensionality reduction
 ``` r
 cds_NE <- reduceDimension(cds_NE, max_components = 2, norm_method = 'log', num_dim = 20, reduction_method = 'tSNE', verbose = T)
 ```
-
-    ## Remove noise by PCA ...
-
-    ## Reduce dimension by tSNE ...
 
 Cluster cells & plot
 
@@ -274,27 +190,6 @@ plot_complex_cell_trajectory(cds_NE, color_by = 'age', cell_size = 0.5, cell_lin
 
 ``` r
 all_BEAM1 <- BEAM(cds_NE, branch_point = 1)
-```
-
-    ## Warning in if (progenitor_method == "duplicate") {: the condition has
-    ## length > 1 and only the first element will be used
-
-    ## Warning in if (progenitor_method == "sequential_split") {: the condition
-    ## has length > 1 and only the first element will be used
-
-    ## Warning in newCellDataSet(as.matrix(exprs_data), phenoData =
-    ## new("AnnotatedDataFrame", : Warning: featureData must contain a column
-    ## verbatim named 'gene_short_name' for certain functions
-
-    ## Warning in newCellDataSet(as.matrix(exprs_data), phenoData =
-    ## new("AnnotatedDataFrame", : Warning: featureData must contain a column
-    ## verbatim named 'gene_short_name' for certain functions
-
-    ## Warning in newCellDataSet(as.matrix(exprs_data), phenoData =
-    ## new("AnnotatedDataFrame", : Warning: featureData must contain a column
-    ## verbatim named 'gene_short_name' for certain functions
-
-``` r
 all_BEAM1 <- all_BEAM1[order(all_BEAM1$qval),]
 ```
 
@@ -304,44 +199,20 @@ all_BEAM1 <- all_BEAM1[order(all_BEAM1$qval),]
 plot_genes_branched_heatmap(cds_NE[row.names(subset(all_BEAM1, qval < 1e-20)),], branch_point = 1, cluster_rows = T, show_rownames = T)
 ```
 
-    ## Warning in newCellDataSet(as.matrix(exprs_data), phenoData =
-    ## new("AnnotatedDataFrame", : Warning: featureData must contain a column
-    ## verbatim named 'gene_short_name' for certain functions
-
-    ## Warning in newCellDataSet(as.matrix(exprs_data), phenoData =
-    ## new("AnnotatedDataFrame", : Warning: featureData must contain a column
-    ## verbatim named 'gene_short_name' for certain functions
-
-    ## Warning in newCellDataSet(as.matrix(exprs_data), phenoData =
-    ## new("AnnotatedDataFrame", : Warning: featureData must contain a column
-    ## verbatim named 'gene_short_name' for certain functions
-
 ![](monoRunThrough_files/figure-markdown_github/unnamed-chunk-19-1.png)
 
 Sorting BEAM genes so that we're only grabbing the ones with the highest qval that are expressed in &gt;100 cells. Call this 'sub\_BEAM'
 
 ``` r
 dim(all_BEAM1)
-```
 
-    ## [1] 17343     6
-
-``` r
 all_BEAM1_order <- all_BEAM1[order(all_BEAM1$qval),]
 dim(all_BEAM1_order)
-```
 
-    ## [1] 17343     6
-
-``` r
 sub_BEAM1 <- all_BEAM1_order[1:100,]
 sub_BEAM1 <- sub_BEAM1[row.names(subset(sub_BEAM1, num_cells_expressed > 100)),]
 dim(sub_BEAM1)
-```
 
-    ## [1] 63  6
-
-``` r
 #write.csv(sub_BEAM1, file = "sub_BEAM1.csv")
 ```
 
