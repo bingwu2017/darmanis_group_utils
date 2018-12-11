@@ -1,0 +1,75 @@
+---
+title: "PlateMap_to_TidyData"
+author: "Shayan Hosseinzadeh"
+date: "10/29/2018"
+output: html_document
+---
+
+##Install packages
+```{r}
+library(plater)
+library(tidyverse)
+```
+
+
+##List of your files
+```{r}
+file_list<-c(
+  "~/Desktop/MACA/24_Month/96well_plates/plate_maps_metadata/24M_96W_1.csv",
+  "~/Desktop/MACA/24_Month/96well_plates/plate_maps_metadata/24M_96W_2.csv",
+  "~/Desktop/MACA/24_Month/96well_plates/plate_maps_metadata/24M_96W_3.csv")
+
+lib_plate_ids<-c(
+  "96Plate1",
+  "96Plate2",
+  "96Plate3"
+)
+```
+##QC file dimensions
+```{r}
+check_plater_format(file = "~/Desktop/MACA/24_Month/96well_plates/plate_maps_metadata/24M_96W_1.csv")
+```
+##Read in plate maps with `plater`
+```{r}
+data<-read_plates(
+  files = file_list,
+  plate_names = lib_plate_ids,
+  well_ids_column = "echo_plate_wells"
+)
+```
+
+##Maniuplate the dataframe
+```{r}
+dim(data)
+names(data)[1]<-"echo_plate"
+names(data)[3]<-"cell_names"
+View(data)
+
+#Build cDNA plate name
+data$cDNA_plate<-paste("MAA", (do.call(rbind, strsplit(data$cell_names, ":"))[,1]), sep="")
+
+#Build cDNA plate origin well names
+data$cDNA_plate_well<-do.call(rbind, strsplit(data$cell_names, ":"))[,2]
+
+cDNA_wells_temp <-data.frame(do.call(rbind, strsplit(data$cell_names, ":"))[,2], )
+colnames(cDNA_wells_temp)<-"Wells"
+View(cDNA_wells_temp)
+
+View(separate(cDNA_wells_temp, col="Wells", into=c('column','row'), sep=-1, convert = T))
+
+#View(do.call(rbind, strsplit(cDNA_wells_temp, split=[,-1])))
+
+write_csv(data, "~/Desktop/96well_data.csv")
+```
+
+
+
+
+
+
+
+
+
+
+
+
