@@ -2,253 +2,1437 @@
 title: "MACA 24 Month Quick QC"
 output: html_notebook
 ---
-
+#Import libraries
 ```{r}
 library(ggplot2)
 library(tidyverse)
 library(Seurat)
 ```
 
-Input gene count tables from MACA runs
+
+#Import Data Frames
+
+##Input gene count tables from MACA runs
 ```{r}
-setwd("~/Desktop/MACA_24_output_analysis/")
-maca_run1 <- read.csv(file = "~/Desktop/MACA_24_output_analysis/180626_A00111_0166_BH5LNVDSXX.csv", header = T, row.names = 1)
-maca_run2 <- read.csv(file = "~/Desktop/MACA_24_output_analysis/180705_A00111_0170_BH5LTFDSXX.csv", header = T, row.names = 1)
-maca_run3 <- read.csv(file = "~/Desktop/MACA_24_output_analysis/180719_A00111_0174_AH725LDSXX.csv", header = T, row.names = 1)
+#setwd("~/Desktop/MACA_24_output_analysis/")
+# maca_r1 <- read.csv(file = "~/Desktop/MACA/24_Month/gcTables/180626_A00111_0166_BH5LNVDSXX.csv", header = T, row.names = 1)
+#maca_r2 <- read.csv(file = "~/Desktop/MACA/24_Month/gcTables/180705_A00111_0170_BH5LTFDSXX.csv", header = T, row.names = 1)
+# maca_r3 <- read.csv(file = "~/Desktop/MACA/24_Month/gcTables/180719_A00111_0174_AH725LDSXX.csv", header = T, row.names = 1)
+# maca_r4 <- read.csv(file = "~/Desktop/MACA/24_Month/gcTables/180727_A00111_0178_AH72YWDSXX.csv", header = T, row.names = 1)
+#maca_r5 <- read.csv(file = "~/Desktop/MACA/24_Month/gcTables/180813_A00111_0188_AH7G2FDSXX.csv", header = T, row.names = 1)
+#maca_r6 <- read.csv(file = "~/Desktop/MACA/24_Month/gcTables/180822_A00111_0194_AH7HCMDSXX.csv", header = T, row.names = 1)
+#maca_r7 <- read.csv(file = "~/Desktop/MACA/24_Month/gcTables/180822_A00111_0195_BH7JT3DSXX.csv", header = T, row.names = 1)
+#maca_r8 <- read.csv(file = "~/Desktop/MACA/24_Month/gcTables/180831_A00111_0201_BH7WGCDSXX.csv", header = T, row.names = 1)
+#maca_r9 <- read.csv(file = "~/Desktop/MACA/24_Month/gcTables/180911_A00111_0207_BHC7KNDSXX.csv", header = T, row.names = 1)
+#maca_r9b <- read.csv(file = "~/Desktop/MACA/24_Month/gcTables/180911_A00111_0208_AH7VGKDSXX.csv", header = T, row.names = 1)
+#maca_r9 <- merge.data.frame(x= maca_r9, y= maca_r9b, by= 0, all= T)
+#rownames(maca_r9)<-maca_r9[,1]
+#maca_r9[,1]<-NULL
+#maca_r10 <- read.csv(file = "~/Desktop/MACA/24_Month/gcTables/180918_A0111_0213_BHGKTWDMXX.csv", header = T, row.names = 1)
+
 ```
 
---------------------
-MACA RUN #1
---------------------
-
+##Import logs from sequencing runs
 ```{r}
-# Filter stats out of data 
-row.names(maca_run1)[grep("__", row.names(maca_run1))]
-# Subset data 
-maca_run1 <- maca_run1[-grep("__", row.names(maca_run1)),]
-dim(maca_run1)
+# maca_log1<- read.csv(file="~/Desktop/MACA/24_Month/gcTables/180626_A00111_0166_BH5LNVDSXX.log.csv", header = T, row.names = 1)
+#maca_log2<- read.csv(file="~/Desktop/MACA/24_Month/gcTables/180705_A00111_0170_BH5LTFDSXX.log.csv", header = T, row.names = 1)
+# maca_log3<- read.csv(file="~/Desktop/MACA/24_Month/gcTables/180719_A00111_0174_AH725LDSXX.log.csv", header = T, row.names = 1)
+#maca_log4<- read.csv(file="~/Desktop/MACA/24_Month/gcTables/180727_A00111_0178_AH72YWDSXX.log.csv", header = T, row.names = 1)
+#maca_log5<- read.csv(file="~/Desktop/MACA/24_Month/gcTables/180813_A00111_0188_AH7G2FDSXX.log.csv", header = T, row.names = 1)
+#maca_log6<- read.csv(file="~/Desktop/MACA/24_Month/gcTables/180822_A00111_0194_AH7HCMDSXX.log.csv", header = T, row.names = 1)
+#maca_log7<- read.csv(file="~/Desktop/MACA/24_Month/gcTables/180822_A00111_0195_BH7JT3DSXX.log.csv", header = T, row.names = 1)
+#maca_log8<- read.csv(file="~/Desktop/MACA/24_Month/gcTables/180831_A00111_0201_BH7WGCDSXX.log.csv", header = T, row.names = 1)
+#maca_log9<- read.csv(file="~/Desktop/MACA/24_Month/gcTables/180911_A00111_0207_BHC7KNDSXX.log.csv", header = T, row.names = 1)
+#maca_log9b<- read.csv(file="~/Desktop/MACA/24_Month/gcTables/180911_A00111_0208_AH7VGKDSXX.log.csv", header = T, row.names = 1)
+#maca_log9 <- merge.data.frame(x= maca_log9, y= maca_log9b, by= 0, all= T)
+#rownames(maca_log9)<-maca_log9[,1]
+#maca_log9[,1]<-NULL
+#maca_log10<- read.csv(file="~/Desktop/MACA/24_Month/gcTables/180918_A0111_0213_BHGKTWDMXX.log.csv", header = T, row.names = 1)
 ```
 
+##Read in master metadata
+```{r}
+maca_meta <- read.csv(file="~/Desktop/MACA/MACA_Metadata_cleaned.csv", header= T)
+#Rename the column names and filter unnecessary data from the df
+rownames(maca_meta)<-maca_meta$X
+maca_meta[,c(2:8,13:20)]<-NULL
+```
+ 
+ 
+#MACA RUN #1
 
+## Filter stats out of data and subset data
+```{r}
+row.names(maca_r1)[grep("__", row.names(maca_r1))]
+dim(maca_r1)
+#Subset the data from the stats
+maca_r1 <- maca_r1[-grep("__", row.names(maca_r1)),]
+dim(maca_r1)
+```
+
+##Make metadata for the run
 ```{r}
 #make metadata
-cell_names <- (do.call(rbind, strsplit(colnames(maca_run1), "_")))
+cell_names <- (do.call(rbind, strsplit(colnames(maca_r1), "_")))
+#concatonate well and plates to make cell names
 cell_names_temp <- apply(cell_names, 1, function(x) paste(x[1], x[2], sep = "_"))
-colnames(maca_run1) <- cell_names_temp
-maca_r1_meta <- data.frame(row.names = colnames(maca_run1))
+#replace the column names in the gc table with cleaned cell names
+colnames(maca_r1) <- cell_names_temp
+#generate run metadata
+maca_r1_meta <- data.frame(row.names = colnames(maca_r1))
 maca_r1_meta$plate <- cell_names[ ,2]
 maca_r1_meta$well <- cell_names[ ,1]
 maca_r1_meta$run <- 1
 maca_r1_meta$cell.id <- rownames(maca_r1_meta)
 ```
 
+##ERCC Stats and Filter
 ```{r}
-#find ERCC's, compute the percent ERCC, and drop them from the raw data
-erccs <- grep(pattern = "^ERCC-", x = rownames(x = maca_run1), value = TRUE)
-percent.ercc <- Matrix::colSums(maca_run1[erccs, ])/Matrix::colSums(maca_run1)
-ercc.index <- grep(pattern = "^ERCC-", x = rownames(x = maca_run1), value = FALSE)
-maca_run1 <- maca_run1[-ercc.index,]
+#Find ERCC's, compute the percent ERCC, and drop them from the raw data
+erccs <- grep(pattern = "^ERCC-", x = rownames(x = maca_r1), value = TRUE)
+percent.ercc <- Matrix::colSums(maca_r1[erccs, ])/Matrix::colSums(maca_r1)
+ercc.index <- grep(pattern = "^ERCC-", x = rownames(x = maca_r1), value = FALSE)
+
+#Remove ERCCs from dataframe
+maca_r1 <- maca_r1[-ercc.index,]
+
 #add percent ERCC's to metadata
 maca_r1_meta$percent.ercc <- percent.ercc
 ```
 
+
+##Append the run's log metadata to the run/plate metadata
 ```{r}
-maca_tiss1 <- CreateSeuratObject(raw.data = maca_run1, meta.data = maca_r1_meta)
+#Subset, transpose, rename the log metadata
+maca_log1<-maca_log1[c(5:9,21:27),]
+maca_log1<-as.data.frame(t(maca_log1), row.names = rownames(maca_r1_meta))
+
+#Convert % to Decimals
+maca_log1<-as.data.frame(apply(maca_log1,2, function(x){
+ as.numeric(sub("%", "", x, fixed=TRUE))}), row.names = row.names(maca_log1))
+
+#Merge with run metadata and clean row names
+maca_r1_meta<-merge(maca_r1_meta, maca_log1, by=0, row.names=T)
+rownames(maca_r1_meta)<-maca_r1_meta[,1]
+maca_r1_meta[,1]<-NULL
+
+#Merge the metadata with the plate metadata
+maca_r1_meta<-merge(maca_r1_meta, maca_meta, by.x = "plate", by.y="X", all.x = T)
+rownames(maca_r1_meta)<-maca_r1_meta$cell.id
 ```
 
+##Generate Seurat Object
+```{r}
+maca_tiss1 <- CreateSeuratObject(raw.data = maca_r1, meta.data = maca_r1_meta)
+
+dim(maca_r1_meta)
+dim(maca_r1)
+maca_tiss1
+#The dimensions of the Seurat object will differ from the raw gc table because Seurat filters samples with 0 gene expression values from the dataset. 
+```
+
+##Rename the nUMI and nGene columns of Seurat Object
 ```{r}
 colnames(maca_tiss1@meta.data)[colnames(maca_tiss1@meta.data) == 'nUMI'] <- 'nReads'
 colnames(maca_tiss1@meta.data)[colnames(maca_tiss1@meta.data) == 'nGene'] <- 'nGenes'
 ```
 
+##Ribogene Metadata
 ```{r}
-ribo.genes <- grep(pattern = "^RP[SL][[:digit:]]", x = rownames(x = maca_tiss1@data), value = TRUE)
+#Identify ribo genes in the Seurat object and calculate % ribo genes for each cell
+ribo.genes <- grep(pattern = "^Rp[sl][[:digit:]]", x = rownames(x = maca_tiss1@data), value = TRUE)
 percent.ribo <- Matrix::colSums(maca_tiss1@raw.data[ribo.genes, ])/Matrix::colSums(maca_tiss1@raw.data)
+#Add % ribo as a metadata column to the Seurat object
 maca_tiss1 <- AddMetaData(object = maca_tiss1, metadata = percent.ribo, col.name = "percent.ribo")
 ```
 
+##Filter cells failing QC in Seurat object
 ```{r}
-maca_tiss1_filtered <- FilterCells(maca_tiss1, subset.names = c('nGenes', 'nReads'), low.thresholds = c(500, 50000))
-#compare
+maca_tiss1_filtered<- FilterCells(maca_tiss1, subset.names = c('nGenes', 'nReads'), low.thresholds = c(500, 50000))
+#Compare the before and after filtered df size
 maca_tiss1
 maca_tiss1_filtered
 ```
 
+##Generate QuickStats
 ```{r}
-ggplot(maca_tiss1@meta.data, aes(x = maca_tiss1@meta.data$nGenes, y = maca_tiss1@meta.data$nReads, colour = maca_tiss1@meta.data$plate)) + geom_point() + geom_hline(yintercept = 50,000) + geom_vline(xintercept = 500) + scale_y_log10() + xlab("nGenes") + ylab("nReads") + guides(colour=guide_legend(title="cDNA Plate"))
+pdf("~/Desktop/run1_quickstats.pdf")
 
-ggplot(maca_tiss1_filtered@meta.data, aes(x = maca_tiss1_filtered@meta.data$nGenes, y = maca_tiss1_filtered@meta.data$nReads, colour = maca_tiss1_filtered@meta.data$plate)) + geom_point() + geom_hline(yintercept = 50,000) + geom_vline(xintercept = 500) + scale_y_log10() + xlab("nGenes") + ylab("nReads") + guides(colour=guide_legend(title="cDNA Plate"))
+ggplot(maca_tiss1@meta.data, aes(x = maca_tiss1@meta.data$nGenes, y = maca_tiss1@meta.data$nReads, colour = maca_tiss1@meta.data$plate)) + geom_point() + geom_hline(yintercept = 50,000) + geom_vline(xintercept = 500) + scale_y_log10() + guides(colour=guide_legend(title="cDNA plate")) + labs(title="Unfiltered", x="nGenes", y="nReads")
 
-ggplot(maca_tiss1_filtered@meta.data, aes(x = maca_tiss1_filtered@meta.data$nGenes, y = maca_tiss1_filtered@meta.data$percent.ercc, colour = maca_tiss1_filtered@meta.data$plate)) + geom_point() + xlab("nGenes") + ylab("percent erccs") + guides(colour=guide_legend(title="cDNA Plate")) + scale_x_log10() + scale_y_log10()
+ggplot(maca_tiss1_filtered@meta.data, aes(x = maca_tiss1_filtered@meta.data$nGenes, y = maca_tiss1_filtered@meta.data$nReads, colour = maca_tiss1_filtered@meta.data$plate)) + geom_point() + geom_hline(yintercept = 50,000) + geom_vline(xintercept = 500) + scale_y_log10() + guides(colour=guide_legend(title="cDNA plate")) + labs(title="Filtered", x="nGenes", y="nReads")
 
-ggplot(maca_tiss1_filtered@meta.data, aes(x = maca_tiss1_filtered@meta.data$plate)) + geom_bar() + theme(axis.text.x = element_text(angle = 90, hjust = 1)) + xlab("cDNA Plate")
+ggplot(maca_tiss1_filtered@meta.data, aes(x = maca_tiss1_filtered@meta.data$nGenes, y = maca_tiss1_filtered@meta.data$percent.ercc, colour = maca_tiss1_filtered@meta.data$plate)) + geom_point() + guides(colour=guide_legend(title="cDNA plate")) + scale_x_log10() + scale_y_log10() + labs(title="Filtered", x="nGenes", y="% ERCCS")
 
-ggplot(maca_tiss1@meta.data, aes(x = maca_tiss1@meta.data$plate, y = maca_tiss1@meta.data$nReads)) + geom_boxplot() + scale_y_log10() + theme(axis.text.x = element_text(angle = 90, hjust = 1)) + xlab(" cDNA Plate") + ylab("nReads")
+ggplot(maca_tiss1_filtered@meta.data, aes(x = maca_tiss1_filtered@meta.data$plate, fill=tissue)) + geom_bar() + geom_text(stat='count', aes(label=..count..), vjust=-.2) + theme(axis.text.x = element_text(angle = 90, hjust = 1)) + labs(title="Filtered", x="cDNA plate")
 
-ggplot(maca_tiss1_filtered@meta.data, aes(x = maca_tiss1_filtered@meta.data$plate, y = maca_tiss1_filtered@meta.data$nReads)) + geom_boxplot() + scale_y_log10() + theme(axis.text.x = element_text(angle = 90, hjust = 1)) + xlab(" cDNA Plate") + ylab("nReads")
+ggplot(maca_tiss1@meta.data, aes(x = maca_tiss1@meta.data$plate, y = maca_tiss1@meta.data$nReads, fill=tissue)) + geom_boxplot() + scale_y_log10() + theme(axis.text.x = element_text(angle = 90, hjust = 1))+ labs(title="Unfiltered", x="cDNA plate", y="nReads")
 
-ggplot(maca_tiss1@meta.data, aes(x = maca_tiss1@meta.data$plate, y = maca_tiss1@meta.data$nGenes)) + geom_boxplot() + scale_y_log10() + theme(axis.text.x = element_text(angle = 90, hjust = 1)) + xlab(" cDNA Plate") + ylab("nGenes")
+ggplot(maca_tiss1_filtered@meta.data, aes(x = maca_tiss1_filtered@meta.data$plate, y = maca_tiss1_filtered@meta.data$nReads, fill=tissue)) + geom_boxplot() + scale_y_log10() + theme(axis.text.x = element_text(angle = 90, hjust = 1)) + labs(title="Filtered", x="cDNA plate", y="nReads")
 
-ggplot(maca_tiss1_filtered@meta.data, aes(x = maca_tiss1_filtered@meta.data$plate, y = maca_tiss1_filtered@meta.data$nGenes)) + geom_boxplot() + scale_y_log10() + theme(axis.text.x = element_text(angle = 90, hjust = 1)) + xlab(" cDNA Plate") + ylab("nGenes")
+ggplot(maca_tiss1@meta.data, aes(x = maca_tiss1@meta.data$plate, y = maca_tiss1@meta.data$nGenes, fill=tissue)) + geom_boxplot() + scale_y_log10() + theme(axis.text.x = element_text(angle = 90, hjust = 1)) + labs(title="Unfiltered", x="cDNA plate", y="nGenes")
 
-ggplot(maca_tiss1@meta.data, aes(x = maca_tiss1@meta.data$plate, y = maca_tiss1@meta.data$percent.ercc)) + geom_boxplot() + theme(axis.text.x = element_text(angle = 90, hjust = 1)) + xlab(" cDNA Plate") + ylab("Percent ERCCs")
+ggplot(maca_tiss1_filtered@meta.data, aes(x = maca_tiss1_filtered@meta.data$plate, y = maca_tiss1_filtered@meta.data$nGenes, fill=tissue)) + geom_boxplot() + scale_y_log10() + theme(axis.text.x = element_text(angle = 90, hjust = 1)) + labs(title="Filtered", x="cDNA plate", y="nGenes")
 
-ggplot(maca_tiss1_filtered@meta.data, aes(x = maca_tiss1_filtered@meta.data$plate, y = maca_tiss1_filtered@meta.data$percent.ercc)) + geom_boxplot() + theme(axis.text.x = element_text(angle = 90, hjust = 1)) + xlab(" cDNA Plate") + ylab("Percent ERCCs")
+ggplot(maca_tiss1@meta.data, aes(x = maca_tiss1@meta.data$plate, y = maca_tiss1@meta.data$percent.ercc, fill=tissue)) + geom_boxplot() + theme(axis.text.x = element_text(angle = 90, hjust = 1)) + labs(title="Unfiltered", x="cDNA plate", y="% ERCCS")
+
+ggplot(maca_tiss1_filtered@meta.data, aes(x = maca_tiss1_filtered@meta.data$plate, y = maca_tiss1_filtered@meta.data$percent.ercc, fill=tissue)) + geom_boxplot() + theme(axis.text.x = element_text(angle = 90, hjust = 1)) + labs(title="Filtered", x="cDNA plate", y="% ERCCS")
+
+ggplot(maca_tiss1@meta.data, aes(x = maca_tiss1@meta.data$plate, y = maca_tiss1@meta.data$percent.ribo, fill=tissue)) + geom_boxplot() + theme(axis.text.x = element_text(angle = 90, hjust = 1)) + labs(title="Unfiltered", x="cDNA plate", y="% Ribo Genes")
+
+ggplot(maca_tiss1_filtered@meta.data, aes(x = maca_tiss1_filtered@meta.data$plate, y = maca_tiss1_filtered@meta.data$percent.ribo, fill=tissue)) + geom_boxplot() + theme(axis.text.x = element_text(angle = 90, hjust = 1)) + labs(title="Filtered", x="cDNA plate", y="% Ribo Genes")
+
+ggplot(maca_tiss1_filtered@meta.data, aes(x = maca_tiss1_filtered@meta.data$plate, y = maca_tiss1_filtered@meta.data$Uniquely.mapped.reads.., fill=tissue)) + geom_boxplot() + theme(axis.text.x = element_text(angle = 90, hjust = 1)) + labs(title="Filtered", x="cDNA plate", y="% Uniquely Mapped Reads")
+
+ggplot(maca_tiss1_filtered@meta.data, aes(x = maca_tiss1_filtered@meta.data$plate, y = maca_tiss1_filtered@meta.data$X..of.reads.unmapped..too.short, fill= tissue)) + geom_boxplot()+ theme(axis.text.x = element_text(angle = 90, hjust = 1)) + labs(title="Filtered", x="cDNA plate", y="% Reads Unmapped: Too Short")
+
+dev.off()
 ```
 
 
---------------------
-MACA RUN #2
---------------------
+#MACA RUN #2
 
+## Filter stats out of data and subset data
 ```{r}
-# Filter stats out of data 
-row.names(maca_run2)[grep("__", row.names(maca_run2))]
-# Subset data 
-maca_run2 <- maca_run2[-grep("__", row.names(maca_run2)),]
-dim(maca_run2)
+row.names(maca_r2)[grep("__", row.names(maca_r2))]
+dim(maca_r2)
+#Subset the data from the stats
+maca_r2<- maca_r2[-grep("__", row.names(maca_r2)),]
+dim(maca_r2)
 ```
 
+##Make metadata for the run
 ```{r}
 #make metadata
-cell_names2 <- (do.call(rbind, strsplit(colnames(maca_run2), "_")))
-cell_names_temp2 <- apply(cell_names2, 1, function(x) paste(x[1], x[2], sep = "_"))
-colnames(maca_run2) <- cell_names_temp2
-maca_r2_meta <- data.frame(row.names = colnames(maca_run2))
-maca_r2_meta$plate <- cell_names2[ ,2]
-maca_r2_meta$well <- cell_names2[ ,1]
-maca_r2_meta$run <- 1
+cell_names <- (do.call(rbind, strsplit(colnames(maca_r2), "_")))
+#concatonate well and plates to make cell names
+cell_names_temp <- apply(cell_names, 1, function(x) paste(x[1], x[2], sep = "_"))
+#replace the column names in the gc table with cleaned cell names
+colnames(maca_r2) <- cell_names_temp
+#generate run metadata
+maca_r2_meta <- data.frame(row.names = colnames(maca_r2))
+maca_r2_meta$plate <- cell_names[ ,2]
+maca_r2_meta$well <- cell_names[ ,1]
+maca_r2_meta$run <- 2
 maca_r2_meta$cell.id <- rownames(maca_r2_meta)
 ```
 
+##ERCC Stats and Filter
 ```{r}
-#find ERCC's, compute the percent ERCC, and drop them from the raw data
-erccs <- grep(pattern = "^ERCC-", x = rownames(x = maca_run2), value = TRUE)
-percent.ercc <- Matrix::colSums(maca_run2[erccs, ])/Matrix::colSums(maca_run2)
-ercc.index <- grep(pattern = "^ERCC-", x = rownames(x = maca_run2), value = FALSE)
-maca_run2 <- maca_run2[-ercc.index,]
+#Find ERCC's, compute the percent ERCC, and drop them from the raw data
+erccs <- grep(pattern = "^ERCC-", x = rownames(x = maca_r2), value = TRUE)
+percent.ercc <- Matrix::colSums(maca_r2[erccs, ])/Matrix::colSums(maca_r2)
+ercc.index <- grep(pattern = "^ERCC-", x = rownames(x = maca_r2), value = FALSE)
+
+#Remove ERCCs from dataframe
+maca_r2 <- maca_r2[-ercc.index,]
+
 #add percent ERCC's to metadata
 maca_r2_meta$percent.ercc <- percent.ercc
 ```
 
+##Append the run's log metadata to the run/plate metadata
 ```{r}
-maca_tiss2 <- CreateSeuratObject(raw.data = maca_run2, meta.data = maca_r2_meta)
+#Subset, transpose, rename the log metadata
+maca_log2<-maca_log2[c(5:9,21:27),]
+maca_log2<-as.data.frame(t(maca_log2), row.names = rownames(maca_r2_meta))
+
+#Convert % to Decimals
+maca_log2<-as.data.frame(apply(maca_log2,2, function(x){
+ as.numeric(sub("%", "", x, fixed=TRUE))}), row.names = row.names(maca_log2))
+
+#Merge with run metadata and clean row names
+maca_r2_meta<-merge(maca_r2_meta, maca_log2, by=0, row.names=T)
+rownames(maca_r2_meta)<-maca_r2_meta[,1]
+maca_r2_meta[,1]<-NULL
+
+#Merge the metadata with the plate metadata
+maca_r2_meta<-merge(maca_r2_meta, maca_meta, by.x = "plate", by.y="X", all.x = T)
+rownames(maca_r2_meta)<-maca_r2_meta$cell.id
 ```
 
+##Generate Seurat Object
+```{r}
+maca_tiss2 <- CreateSeuratObject(raw.data = maca_r2, meta.data = maca_r2_meta)
+
+dim(maca_r2_meta)
+dim(maca_r2)
+maca_tiss2
+#The dimensions of the Seurat object will differ from the raw gc table because Seurat filters samples with 0 gene expression values from the dataset. 
+```
+
+##Rename the nUMI and nGene columns of Seurat Object
 ```{r}
 colnames(maca_tiss2@meta.data)[colnames(maca_tiss2@meta.data) == 'nUMI'] <- 'nReads'
 colnames(maca_tiss2@meta.data)[colnames(maca_tiss2@meta.data) == 'nGene'] <- 'nGenes'
 ```
 
+##Ribogene Metadata
 ```{r}
-ribo.genes <- grep(pattern = "^RP[SL][[:digit:]]", x = rownames(x = maca_tiss2@data), value = TRUE)
+#Identify ribo genes in the Seurat object and calculate % ribo genes for each cell
+ribo.genes <- grep(pattern = "^Rp[sl][[:digit:]]", x = rownames(x = maca_tiss2@data), value = TRUE)
 percent.ribo <- Matrix::colSums(maca_tiss2@raw.data[ribo.genes, ])/Matrix::colSums(maca_tiss2@raw.data)
+#Add % ribo as a metadata column to the Seurat object
 maca_tiss2 <- AddMetaData(object = maca_tiss2, metadata = percent.ribo, col.name = "percent.ribo")
 ```
 
+##Filter cells failing QC in Seurat object
 ```{r}
-maca_tiss2_filtered <- FilterCells(maca_tiss2, subset.names = c('nGenes', 'nReads'), low.thresholds = c(500, 50000))
-#compare
+maca_tiss2_filtered<- FilterCells(maca_tiss2, subset.names = c('nGenes', 'nReads'), low.thresholds = c(500, 50000))
+#Compare the before and after filtered df size
 maca_tiss2
 maca_tiss2_filtered
 ```
 
+##Generate QuickStats
 ```{r}
-ggplot(maca_tiss2@meta.data, aes(x = maca_tiss2@meta.data$nGenes, y = maca_tiss2@meta.data$nReads, colour = maca_tiss2@meta.data$plate)) + geom_point() + geom_hline(yintercept = 50,000) + geom_vline(xintercept = 500) + scale_y_log10() + xlab("nGenes") + ylab("nReads") + guides(colour=guide_legend(title="cDNA Plate"))
+#pdf("~/Desktop/run2_quickstats.pdf")
 
-ggplot(maca_tiss2_filtered@meta.data, aes(x = maca_tiss2_filtered@meta.data$nGenes, y = maca_tiss2_filtered@meta.data$nReads, colour = maca_tiss2_filtered@meta.data$plate)) + geom_point() + geom_hline(yintercept = 50,000) + geom_vline(xintercept = 500) + scale_y_log10() + xlab("nGenes") + ylab("nReads") + guides(colour=guide_legend(title="cDNA Plate"))
+ggplot(maca_tiss2@meta.data, aes(x = maca_tiss2@meta.data$nGenes, y = maca_tiss2@meta.data$nReads, colour = maca_tiss2@meta.data$plate)) + geom_point() + geom_hline(yintercept = 50,000) + geom_vline(xintercept = 500) + scale_y_log10() + guides(colour=guide_legend(title="cDNA plate")) + labs(title="Unfiltered", x="nGenes", y="nReads")
 
-ggplot(maca_tiss2_filtered@meta.data, aes(x = maca_tiss2_filtered@meta.data$nGenes, y = maca_tiss2_filtered@meta.data$percent.ercc, colour = maca_tiss2_filtered@meta.data$plate)) + geom_point() + xlab("nGenes") + ylab("percent erccs") + guides(colour=guide_legend(title="cDNA Plate")) + scale_x_log10() + scale_y_log10()
+ggplot(maca_tiss2_filtered@meta.data, aes(x = maca_tiss2_filtered@meta.data$nGenes, y = maca_tiss2_filtered@meta.data$nReads, colour = maca_tiss2_filtered@meta.data$plate)) + geom_point() + geom_hline(yintercept = 50,000) + geom_vline(xintercept = 500) + scale_y_log10() + guides(colour=guide_legend(title="cDNA plate")) + labs(title="Filtered", x="nGenes", y="nReads")
 
-ggplot(maca_tiss2_filtered@meta.data, aes(x = maca_tiss2_filtered@meta.data$plate)) + geom_bar() + theme(axis.text.x = element_text(angle = 90, hjust = 1)) + xlab("cDNA Plate")
+ggplot(maca_tiss2_filtered@meta.data, aes(x = maca_tiss2_filtered@meta.data$nGenes, y = maca_tiss2_filtered@meta.data$percent.ercc, colour = maca_tiss2_filtered@meta.data$plate)) + geom_point() + guides(colour=guide_legend(title="cDNA plate")) + scale_x_log10() + scale_y_log10() + labs(title="Filtered", x="nGenes", y="% ERCCS")
 
-ggplot(maca_tiss2@meta.data, aes(x = maca_tiss2@meta.data$plate, y = maca_tiss2@meta.data$nReads)) + geom_boxplot() + scale_y_log10() + theme(axis.text.x = element_text(angle = 90, hjust = 1)) + xlab(" cDNA Plate") + ylab("nReads")
+ggplot(maca_tiss2_filtered@meta.data, aes(x = maca_tiss2_filtered@meta.data$plate, fill=tissue)) + geom_bar() + geom_text(stat='count', aes(label=..count..), vjust=-.2) + theme(axis.text.x = element_text(angle = 90, hjust = 1)) + labs(title="Filtered", x="cDNA plate")
 
-ggplot(maca_tiss2_filtered@meta.data, aes(x = maca_tiss2_filtered@meta.data$plate, y = maca_tiss2_filtered@meta.data$nReads)) + geom_boxplot() + scale_y_log10() + theme(axis.text.x = element_text(angle = 90, hjust = 1)) + xlab(" cDNA Plate") + ylab("nReads")
+ggplot(maca_tiss2@meta.data, aes(x = maca_tiss2@meta.data$plate, y = maca_tiss2@meta.data$nReads, fill=tissue)) + geom_boxplot() + scale_y_log10() + theme(axis.text.x = element_text(angle = 90, hjust = 1))+ labs(title="Unfiltered", x="cDNA plate", y="nReads")
 
-ggplot(maca_tiss2@meta.data, aes(x = maca_tiss2@meta.data$plate, y = maca_tiss2@meta.data$nGenes)) + geom_boxplot() + scale_y_log10() + theme(axis.text.x = element_text(angle = 90, hjust = 1)) + xlab(" cDNA Plate") + ylab("nGenes")
+ggplot(maca_tiss2_filtered@meta.data, aes(x = maca_tiss2_filtered@meta.data$plate, y = maca_tiss2_filtered@meta.data$nReads, fill=tissue)) + geom_boxplot() + scale_y_log10() + theme(axis.text.x = element_text(angle = 90, hjust = 1)) + labs(title="Filtered", x="cDNA plate", y="nReads")
 
-ggplot(maca_tiss2_filtered@meta.data, aes(x = maca_tiss2_filtered@meta.data$plate, y = maca_tiss2_filtered@meta.data$nGenes)) + geom_boxplot() + scale_y_log10() + theme(axis.text.x = element_text(angle = 90, hjust = 1)) + xlab(" cDNA Plate") + ylab("nGenes")
+ggplot(maca_tiss2@meta.data, aes(x = maca_tiss2@meta.data$plate, y = maca_tiss2@meta.data$nGenes, fill=tissue)) + geom_boxplot() + scale_y_log10() + theme(axis.text.x = element_text(angle = 90, hjust = 1)) + labs(title="Unfiltered", x="cDNA plate", y="nGenes")
 
-ggplot(maca_tiss2@meta.data, aes(x = maca_tiss2@meta.data$plate, y = maca_tiss2@meta.data$percent.ercc)) + geom_boxplot() + theme(axis.text.x = element_text(angle = 90, hjust = 1)) + xlab(" cDNA Plate") + ylab("Percent ERCCs")
+ggplot(maca_tiss2_filtered@meta.data, aes(x = maca_tiss2_filtered@meta.data$plate, y = maca_tiss2_filtered@meta.data$nGenes, fill=tissue)) + geom_boxplot() + scale_y_log10() + theme(axis.text.x = element_text(angle = 90, hjust = 1)) + labs(title="Filtered", x="cDNA plate", y="nGenes")
 
-ggplot(maca_tiss2_filtered@meta.data, aes(x = maca_tiss2_filtered@meta.data$plate, y = maca_tiss2_filtered@meta.data$percent.ercc)) + geom_boxplot() + theme(axis.text.x = element_text(angle = 90, hjust = 1)) + xlab(" cDNA Plate") + ylab("Percent ERCCs")
+ggplot(maca_tiss2@meta.data, aes(x = maca_tiss2@meta.data$plate, y = maca_tiss2@meta.data$percent.ercc, fill=tissue)) + geom_boxplot() + theme(axis.text.x = element_text(angle = 90, hjust = 1)) + labs(title="Unfiltered", x="cDNA plate", y="% ERCCS")
+
+ggplot(maca_tiss2_filtered@meta.data, aes(x = maca_tiss2_filtered@meta.data$plate, y = maca_tiss2_filtered@meta.data$percent.ercc, fill=tissue)) + geom_boxplot() + theme(axis.text.x = element_text(angle = 90, hjust = 1)) + labs(title="Filtered", x="cDNA plate", y="% ERCCS")
+
+ggplot(maca_tiss2@meta.data, aes(x = maca_tiss2@meta.data$plate, y = maca_tiss2@meta.data$percent.ribo, fill=tissue)) + geom_boxplot() + theme(axis.text.x = element_text(angle = 90, hjust = 1)) + labs(title="Unfiltered", x="cDNA plate", y="% Ribo Genes")
+
+ggplot(maca_tiss2_filtered@meta.data, aes(x = maca_tiss2_filtered@meta.data$plate, y = maca_tiss2_filtered@meta.data$percent.ribo, fill=tissue)) + geom_boxplot() + theme(axis.text.x = element_text(angle = 90, hjust = 1)) + labs(title="Filtered", x="cDNA plate", y="% Ribo Genes")
+
+ggplot(maca_tiss2_filtered@meta.data, aes(x = maca_tiss2_filtered@meta.data$plate, y = maca_tiss2_filtered@meta.data$Uniquely.mapped.reads.., fill=tissue)) + geom_boxplot() + theme(axis.text.x = element_text(angle = 90, hjust = 1)) + labs(title="Filtered", x="cDNA plate", y="% Uniquely Mapped Reads")
+
+ggplot(maca_tiss2_filtered@meta.data, aes(x = maca_tiss2_filtered@meta.data$plate, y = maca_tiss2_filtered@meta.data$X..of.reads.unmapped..too.short, fill= tissue)) + geom_boxplot()+ theme(axis.text.x = element_text(angle = 90, hjust = 1)) + labs(title="Filtered", x="cDNA plate", y="% Reads Unmapped: Too Short")
+
+dev.off()
 ```
 
---------------------
-MACA RUN #3
---------------------
 
+
+#MACA RUN #3
+
+## Filter stats out of data and subset data
 ```{r}
-# Filter stats out of data 
-row.names(maca_run3)[grep("__", row.names(maca_run3))]
-# Subset data 
-maca_run3 <- maca_run3[-grep("__", row.names(maca_run3)),]
-dim(maca_run3)
+row.names(maca_r3)[grep("__", row.names(maca_r3))]
+dim(maca_r3)
+#Subset the data from the stats
+maca_r3 <- maca_r3[-grep("__", row.names(maca_r3)),]
+dim(maca_r3)
 ```
 
+##Make metadata for the run
 ```{r}
 #make metadata
-cell_names3 <- (do.call(rbind, strsplit(colnames(maca_run3), "_")))
-cell_names_temp3 <- apply(cell_names3, 1, function(x) paste(x[1], x[2], sep = "_"))
-colnames(maca_run3) <- cell_names_temp3
-maca_r3_meta <- data.frame(row.names = colnames(maca_run3))
-maca_r3_meta$plate <- cell_names2[ ,2]
-maca_r3_meta$well <- cell_names2[ ,1]
-maca_r3_meta$run <- 1
+cell_names <- (do.call(rbind, strsplit(colnames(maca_r3), "_")))
+#concatonate well and plates to make cell names
+cell_names_temp <- apply(cell_names, 1, function(x) paste(x[1], x[2], sep = "_"))
+#replace the column names in the gc table with cleaned cell names
+colnames(maca_r3) <- cell_names_temp
+#generate run metadata
+maca_r3_meta <- data.frame(row.names = colnames(maca_r3))
+maca_r3_meta$plate <- cell_names[ ,2]
+maca_r3_meta$well <- cell_names[ ,1]
+maca_r3_meta$run <- 3
 maca_r3_meta$cell.id <- rownames(maca_r3_meta)
 ```
 
+##ERCC Stats and Filter
 ```{r}
-#find ERCC's, compute the percent ERCC, and drop them from the raw data
-erccs <- grep(pattern = "^ERCC-", x = rownames(x = maca_run3), value = TRUE)
-percent.ercc <- Matrix::colSums(maca_run3[erccs, ])/Matrix::colSums(maca_run3)
-ercc.index <- grep(pattern = "^ERCC-", x = rownames(x = maca_run3), value = FALSE)
-maca_run3 <- maca_run3[-ercc.index,]
+#Find ERCC's, compute the percent ERCC, and drop them from the raw data
+erccs <- grep(pattern = "^ERCC-", x = rownames(x = maca_r3), value = TRUE)
+percent.ercc <- Matrix::colSums(maca_r3[erccs, ])/Matrix::colSums(maca_r3)
+ercc.index <- grep(pattern = "^ERCC-", x = rownames(x = maca_r3), value = FALSE)
+
+#Remove ERCCs from dataframe
+maca_r3 <- maca_r3[-ercc.index,]
+
 #add percent ERCC's to metadata
 maca_r3_meta$percent.ercc <- percent.ercc
 ```
 
+##Append the run's log metadata to the run/plate metadata
 ```{r}
-maca_tiss3 <- CreateSeuratObject(raw.data = maca_run3, meta.data = maca_r3_meta)
+#Subset, transpose, rename the log metadata
+maca_log3<-maca_log3[c(5:9,21:27),]
+maca_log3<-as.data.frame(t(maca_log3), row.names = rownames(maca_r3_meta))
+
+#Convert % to Decimals
+maca_log3<-as.data.frame(apply(maca_log3,2, function(x){
+ as.numeric(sub("%", "", x, fixed=TRUE))}), row.names = row.names(maca_log3))
+
+#Merge with run metadata and clean row names
+maca_r3_meta<-merge(maca_r3_meta, maca_log3, by=0, row.names=T)
+rownames(maca_r3_meta)<-maca_r3_meta[,1]
+maca_r3_meta[,1]<-NULL
+
+#Merge the metadata with the plate metadata
+maca_r3_meta<-merge(maca_r3_meta, maca_meta, by.x = "plate", by.y="X", all.x = F)
+rownames(maca_r3_meta)<-maca_r3_meta$cell.id
 ```
 
+##Generate Seurat Object
+```{r}
+maca_tiss3 <- CreateSeuratObject(raw.data = maca_r3, meta.data = maca_r3_meta)
+
+dim(maca_r3_meta)
+dim(maca_r3)
+maca_tiss3
+#The dimensions of the Seurat object will differ from the raw gc table because Seurat filters samples with 0 gene expression values from the dataset. 
+```
+
+##Rename the nUMI and nGene columns of Seurat Object
 ```{r}
 colnames(maca_tiss3@meta.data)[colnames(maca_tiss3@meta.data) == 'nUMI'] <- 'nReads'
 colnames(maca_tiss3@meta.data)[colnames(maca_tiss3@meta.data) == 'nGene'] <- 'nGenes'
 ```
 
+##Ribogene Metadata
 ```{r}
-ribo.genes <- grep(pattern = "^RP[SL][[:digit:]]", x = rownames(x = maca_tiss3@data), value = TRUE)
+#Identify ribo genes in the Seurat object and calculate % ribo genes for each cell
+ribo.genes <- grep(pattern = "^Rp[sl][[:digit:]]", x = rownames(x = maca_tiss3@data), value = TRUE)
 percent.ribo <- Matrix::colSums(maca_tiss3@raw.data[ribo.genes, ])/Matrix::colSums(maca_tiss3@raw.data)
+#Add % ribo as a metadata column to the Seurat object
 maca_tiss3 <- AddMetaData(object = maca_tiss3, metadata = percent.ribo, col.name = "percent.ribo")
 ```
 
+##Filter cells failing QC in Seurat object
 ```{r}
-maca_tiss3_filtered <- FilterCells(maca_tiss3, subset.names = c('nGenes', 'nReads'), low.thresholds = c(500, 50000))
-#compare
+maca_tiss3_filtered<- FilterCells(maca_tiss3, subset.names = c('nGenes', 'nReads'), low.thresholds = c(500, 50000))
+#Compare the before and after filtered df size
 maca_tiss3
 maca_tiss3_filtered
 ```
 
+##Generate QuickStats
 ```{r}
-ggplot(maca_tiss3@meta.data, aes(x = maca_tiss3@meta.data$nGenes, y = maca_tiss3@meta.data$nReads, colour = maca_tiss3@meta.data$plate)) + geom_point() + geom_hline(yintercept = 50,000) + geom_vline(xintercept = 500) + scale_y_log10() + xlab("nGenes") + ylab("nReads") + guides(colour=guide_legend(title="cDNA Plate"))
+pdf("~/Desktop/run3_quickstats.pdf")
 
-ggplot(maca_tiss3_filtered@meta.data, aes(x = maca_tiss3_filtered@meta.data$nGenes, y = maca_tiss3_filtered@meta.data$nReads, colour = maca_tiss3_filtered@meta.data$plate)) + geom_point() + geom_hline(yintercept = 50,000) + geom_vline(xintercept = 500) + scale_y_log10() + xlab("nGenes") + ylab("nReads") + guides(colour=guide_legend(title="cDNA Plate"))
+ggplot(maca_tiss3@meta.data, aes(x = maca_tiss3@meta.data$nGenes, y = maca_tiss3@meta.data$nReads, colour = maca_tiss3@meta.data$plate)) + geom_point() + geom_hline(yintercept = 50,000) + geom_vline(xintercept = 500) + scale_y_log10() + guides(colour=guide_legend(title="cDNA plate")) + labs(title="Unfiltered", x="nGenes", y="nReads")
 
-ggplot(maca_tiss3_filtered@meta.data, aes(x = maca_tiss3_filtered@meta.data$nGenes, y = maca_tiss3_filtered@meta.data$percent.ercc, colour = maca_tiss3_filtered@meta.data$plate)) + geom_point() + xlab("nGenes") + ylab("percent erccs") + guides(colour=guide_legend(title="cDNA Plate")) + scale_x_log10() + scale_y_log10()
+ggplot(maca_tiss3_filtered@meta.data, aes(x = maca_tiss3_filtered@meta.data$nGenes, y = maca_tiss3_filtered@meta.data$nReads, colour = maca_tiss3_filtered@meta.data$plate)) + geom_point() + geom_hline(yintercept = 50,000) + geom_vline(xintercept = 500) + scale_y_log10() + guides(colour=guide_legend(title="cDNA plate")) + labs(title="Filtered", x="nGenes", y="nReads")
 
-ggplot(maca_tiss3_filtered@meta.data, aes(x = maca_tiss3_filtered@meta.data$plate)) + geom_bar() + theme(axis.text.x = element_text(angle = 90, hjust = 1)) + xlab("cDNA Plate")
+ggplot(maca_tiss3_filtered@meta.data, aes(x = maca_tiss3_filtered@meta.data$nGenes, y = maca_tiss3_filtered@meta.data$percent.ercc, colour = maca_tiss3_filtered@meta.data$plate)) + geom_point() + guides(colour=guide_legend(title="cDNA plate")) + scale_x_log10() + scale_y_log10() + labs(title="Filtered", x="nGenes", y="% ERCCS")
 
-ggplot(maca_tiss3@meta.data, aes(x = maca_tiss3@meta.data$plate, y = maca_tiss3@meta.data$nReads)) + geom_boxplot() + scale_y_log10() + theme(axis.text.x = element_text(angle = 90, hjust = 1)) + xlab(" cDNA Plate") + ylab("nReads")
+ggplot(maca_tiss3_filtered@meta.data, aes(x = maca_tiss3_filtered@meta.data$plate, fill=tissue)) + geom_bar() + geom_text(stat='count', aes(label=..count..), vjust=-.2) + theme(axis.text.x = element_text(angle = 90, hjust = 1)) + labs(title="Filtered", x="cDNA plate")
 
-ggplot(maca_tiss3_filtered@meta.data, aes(x = maca_tiss3_filtered@meta.data$plate, y = maca_tiss3_filtered@meta.data$nReads)) + geom_boxplot() + scale_y_log10() + theme(axis.text.x = element_text(angle = 90, hjust = 1)) + xlab(" cDNA Plate") + ylab("nReads")
+ggplot(maca_tiss3@meta.data, aes(x = maca_tiss3@meta.data$plate, y = maca_tiss3@meta.data$nReads, fill=tissue)) + geom_boxplot() + scale_y_log10() + theme(axis.text.x = element_text(angle = 90, hjust = 1))+ labs(title="Unfiltered", x="cDNA plate", y="nReads")
 
-ggplot(maca_tiss3@meta.data, aes(x = maca_tiss3@meta.data$plate, y = maca_tiss3@meta.data$nGenes)) + geom_boxplot() + scale_y_log10() + theme(axis.text.x = element_text(angle = 90, hjust = 1)) + xlab(" cDNA Plate") + ylab("nGenes")
+ggplot(maca_tiss3_filtered@meta.data, aes(x = maca_tiss3_filtered@meta.data$plate, y = maca_tiss3_filtered@meta.data$nReads, fill=tissue)) + geom_boxplot() + scale_y_log10() + theme(axis.text.x = element_text(angle = 90, hjust = 1)) + labs(title="Filtered", x="cDNA plate", y="nReads")
 
-ggplot(maca_tiss3_filtered@meta.data, aes(x = maca_tiss3_filtered@meta.data$plate, y = maca_tiss3_filtered@meta.data$nGenes)) + geom_boxplot() + scale_y_log10() + theme(axis.text.x = element_text(angle = 90, hjust = 1)) + xlab(" cDNA Plate") + ylab("nGenes")
+ggplot(maca_tiss3@meta.data, aes(x = maca_tiss3@meta.data$plate, y = maca_tiss3@meta.data$nGenes, fill=tissue)) + geom_boxplot() + scale_y_log10() + theme(axis.text.x = element_text(angle = 90, hjust = 1)) + labs(title="Unfiltered", x="cDNA plate", y="nGenes")
 
-ggplot(maca_tiss3@meta.data, aes(x = maca_tiss3@meta.data$plate, y = maca_tiss3@meta.data$percent.ercc)) + geom_boxplot() + theme(axis.text.x = element_text(angle = 90, hjust = 1)) + xlab(" cDNA Plate") + ylab("Percent ERCCs")
+ggplot(maca_tiss3_filtered@meta.data, aes(x = maca_tiss3_filtered@meta.data$plate, y = maca_tiss3_filtered@meta.data$nGenes, fill=tissue)) + geom_boxplot() + scale_y_log10() + theme(axis.text.x = element_text(angle = 90, hjust = 1)) + labs(title="Filtered", x="cDNA plate", y="nGenes")
 
-ggplot(maca_tiss3_filtered@meta.data, aes(x = maca_tiss3_filtered@meta.data$plate, y = maca_tiss3_filtered@meta.data$percent.ercc)) + geom_boxplot() + theme(axis.text.x = element_text(angle = 90, hjust = 1)) + xlab(" cDNA Plate") + ylab("Percent ERCCs")
+ggplot(maca_tiss3@meta.data, aes(x = maca_tiss3@meta.data$plate, y = maca_tiss3@meta.data$percent.ercc, fill=tissue)) + geom_boxplot() + theme(axis.text.x = element_text(angle = 90, hjust = 1)) + labs(title="Unfiltered", x="cDNA plate", y="% ERCCS")
+
+ggplot(maca_tiss3_filtered@meta.data, aes(x = maca_tiss3_filtered@meta.data$plate, y = maca_tiss3_filtered@meta.data$percent.ercc, fill=tissue)) + geom_boxplot() + theme(axis.text.x = element_text(angle = 90, hjust = 1)) + labs(title="Filtered", x="cDNA plate", y="% ERCCS")
+
+ggplot(maca_tiss3@meta.data, aes(x = maca_tiss3@meta.data$plate, y = maca_tiss3@meta.data$percent.ribo, fill=tissue)) + geom_boxplot() + theme(axis.text.x = element_text(angle = 90, hjust = 1)) + labs(title="Unfiltered", x="cDNA plate", y="% Ribo Genes")
+
+ggplot(maca_tiss3_filtered@meta.data, aes(x = maca_tiss3_filtered@meta.data$plate, y = maca_tiss3_filtered@meta.data$percent.ribo, fill=tissue)) + geom_boxplot() + theme(axis.text.x = element_text(angle = 90, hjust = 1)) + labs(title="Filtered", x="cDNA plate", y="% Ribo Genes")
+
+ggplot(maca_tiss3_filtered@meta.data, aes(x = maca_tiss3_filtered@meta.data$plate, y = maca_tiss3_filtered@meta.data$Uniquely.mapped.reads.., fill=tissue)) + geom_boxplot() + theme(axis.text.x = element_text(angle = 90, hjust = 1)) + labs(title="Filtered", x="cDNA plate", y="% Uniquely Mapped Reads")
+
+ggplot(maca_tiss3_filtered@meta.data, aes(x = maca_tiss3_filtered@meta.data$plate, y = maca_tiss3_filtered@meta.data$X..of.reads.unmapped..too.short, fill= tissue)) + geom_boxplot()+ theme(axis.text.x = element_text(angle = 90, hjust = 1)) + labs(title="Filtered", x="cDNA plate", y="% Reads Unmapped: Too Short")
+
+dev.off()
 ```
+
+
+#MACA RUN #4
+
+## Filter stats out of data and subset data
+```{r}
+row.names(maca_r4)[grep("__", row.names(maca_r4))]
+dim(maca_r4)
+#Subset the data from the stats
+maca_r4 <- maca_r4[-grep("__", row.names(maca_r4)),]
+dim(maca_r4)
+```
+
+##Make metadata for the run
+```{r}
+#make metadata
+cell_names <- (do.call(rbind, strsplit(colnames(maca_r4), "_")))
+#concatonate well and plates to make cell names
+cell_names_temp <- apply(cell_names, 1, function(x) paste(x[1], x[2], sep = "_"))
+#replace the column names in the gc table with cleaned cell names
+colnames(maca_r4) <- cell_names_temp
+#generate run metadata
+maca_r4_meta <- data.frame(row.names = colnames(maca_r4))
+maca_r4_meta$plate <- cell_names[ ,2]
+maca_r4_meta$well <- cell_names[ ,1]
+maca_r4_meta$run <- 4
+maca_r4_meta$cell.id <- rownames(maca_r4_meta)
+```
+
+##ERCC Stats and Filter
+```{r}
+#Find ERCC's, compute the percent ERCC, and drop them from the raw data
+erccs <- grep(pattern = "^ERCC-", x = rownames(x = maca_r4), value = TRUE)
+percent.ercc <- Matrix::colSums(maca_r4[erccs, ])/Matrix::colSums(maca_r4)
+ercc.index <- grep(pattern = "^ERCC-", x = rownames(x = maca_r4), value = FALSE)
+
+#Remove ERCCs from dataframe
+maca_r4 <- maca_r4[-ercc.index,]
+
+#add percent ERCC's to metadata
+maca_r4_meta$percent.ercc <- percent.ercc
+```
+
+##Append the run's log metadata to the run/plate metadata
+```{r}
+#Subset, transpose, rename the log metadata
+maca_log4<-maca_log4[c(5:9,21:27),]
+maca_log4<-as.data.frame(t(maca_log4), row.names = rownames(maca_r4_meta))
+
+#Convert % to Decimals
+maca_log4<-as.data.frame(apply(maca_log4,2, function(x){
+ as.numeric(sub("%", "", x, fixed=TRUE))}), row.names = row.names(maca_log4))
+
+#Merge with run metadata and clean row names
+maca_r4_meta<-merge(maca_r4_meta, maca_log4, by=0, row.names=T)
+rownames(maca_r4_meta)<-maca_r4_meta[,1]
+maca_r4_meta[,1]<-NULL
+
+#Merge the metadata with the plate metadata
+maca_r4_meta<-merge(maca_r4_meta, maca_meta, by.x = "plate", by.y="X", all.x = T)
+rownames(maca_r4_meta)<-maca_r4_meta$cell.id
+```
+
+##Generate Seurat Object
+```{r}
+maca_tiss4 <- CreateSeuratObject(raw.data = maca_r4, meta.data = maca_r4_meta)
+
+dim(maca_r4_meta)
+dim(maca_r4)
+maca_tiss4
+#The dimensions of the Seurat object will differ from the raw gc table because Seurat filters samples with 0 gene expression values from the dataset. 
+```
+
+##Rename the nUMI and nGene columns of Seurat Object
+```{r}
+colnames(maca_tiss4@meta.data)[colnames(maca_tiss4@meta.data) == 'nUMI'] <- 'nReads'
+colnames(maca_tiss4@meta.data)[colnames(maca_tiss4@meta.data) == 'nGene'] <- 'nGenes'
+```
+
+##Ribogene Metadata
+```{r}
+#Identify ribo genes in the Seurat object and calculate % ribo genes for each cell
+ribo.genes <- grep(pattern = "^Rp[sl][[:digit:]]", x = rownames(x = maca_tiss4@data), value = TRUE)
+percent.ribo <- Matrix::colSums(maca_tiss4@raw.data[ribo.genes, ])/Matrix::colSums(maca_tiss4@raw.data)
+#Add % ribo as a metadata column to the Seurat object
+maca_tiss4 <- AddMetaData(object = maca_tiss4, metadata = percent.ribo, col.name = "percent.ribo")
+```
+
+##Filter cells failing QC in Seurat object
+```{r}
+maca_tiss4_filtered<- FilterCells(maca_tiss4, subset.names = c('nGenes', 'nReads'), low.thresholds = c(500, 50000))
+#Compare the before and after filtered df size
+maca_tiss4
+maca_tiss4_filtered
+```
+
+##Generate QuickStats
+```{r}
+pdf("~/Desktop/run4_quickstats.pdf")
+
+ggplot(maca_tiss4@meta.data, aes(x = maca_tiss4@meta.data$nGenes, y = maca_tiss4@meta.data$nReads, colour = maca_tiss4@meta.data$plate)) + geom_point() + geom_hline(yintercept = 50,000) + geom_vline(xintercept = 500) + scale_y_log10() + guides(colour=guide_legend(title="cDNA plate")) + labs(title="Unfiltered", x="nGenes", y="nReads")
+
+ggplot(maca_tiss4_filtered@meta.data, aes(x = maca_tiss4_filtered@meta.data$nGenes, y = maca_tiss4_filtered@meta.data$nReads, colour = maca_tiss4_filtered@meta.data$plate)) + geom_point() + geom_hline(yintercept = 50,000) + geom_vline(xintercept = 500) + scale_y_log10() + guides(colour=guide_legend(title="cDNA plate")) + labs(title="Filtered", x="nGenes", y="nReads")
+
+ggplot(maca_tiss4_filtered@meta.data, aes(x = maca_tiss4_filtered@meta.data$nGenes, y = maca_tiss4_filtered@meta.data$percent.ercc, colour = maca_tiss4_filtered@meta.data$plate)) + geom_point() + guides(colour=guide_legend(title="cDNA plate")) + scale_x_log10() + scale_y_log10() + labs(title="Filtered", x="nGenes", y="% ERCCS")
+
+ggplot(maca_tiss4_filtered@meta.data, aes(x = maca_tiss4_filtered@meta.data$plate, fill=tissue)) + geom_bar() + geom_text(stat='count', aes(label=..count..), vjust=-.2) + theme(axis.text.x = element_text(angle = 90, hjust = 1)) + labs(title="Filtered", x="cDNA plate")
+
+ggplot(maca_tiss4@meta.data, aes(x = maca_tiss4@meta.data$plate, y = maca_tiss4@meta.data$nReads, fill=tissue)) + geom_boxplot() + scale_y_log10() + theme(axis.text.x = element_text(angle = 90, hjust = 1))+ labs(title="Unfiltered", x="cDNA plate", y="nReads")
+
+ggplot(maca_tiss4_filtered@meta.data, aes(x = maca_tiss4_filtered@meta.data$plate, y = maca_tiss4_filtered@meta.data$nReads, fill=tissue)) + geom_boxplot() + scale_y_log10() + theme(axis.text.x = element_text(angle = 90, hjust = 1)) + labs(title="Filtered", x="cDNA plate", y="nReads")
+
+ggplot(maca_tiss4@meta.data, aes(x = maca_tiss4@meta.data$plate, y = maca_tiss4@meta.data$nGenes, fill=tissue)) + geom_boxplot() + scale_y_log10() + theme(axis.text.x = element_text(angle = 90, hjust = 1)) + labs(title="Unfiltered", x="cDNA plate", y="nGenes")
+
+ggplot(maca_tiss4_filtered@meta.data, aes(x = maca_tiss4_filtered@meta.data$plate, y = maca_tiss4_filtered@meta.data$nGenes, fill=tissue)) + geom_boxplot() + scale_y_log10() + theme(axis.text.x = element_text(angle = 90, hjust = 1)) + labs(title="Filtered", x="cDNA plate", y="nGenes")
+
+ggplot(maca_tiss4@meta.data, aes(x = maca_tiss4@meta.data$plate, y = maca_tiss4@meta.data$percent.ercc, fill=tissue)) + geom_boxplot() + theme(axis.text.x = element_text(angle = 90, hjust = 1)) + labs(title="Unfiltered", x="cDNA plate", y="% ERCCS")
+
+ggplot(maca_tiss4_filtered@meta.data, aes(x = maca_tiss4_filtered@meta.data$plate, y = maca_tiss4_filtered@meta.data$percent.ercc, fill=tissue)) + geom_boxplot() + theme(axis.text.x = element_text(angle = 90, hjust = 1)) + labs(title="Filtered", x="cDNA plate", y="% ERCCS")
+
+ggplot(maca_tiss4@meta.data, aes(x = maca_tiss4@meta.data$plate, y = maca_tiss4@meta.data$percent.ribo, fill=tissue)) + geom_boxplot() + theme(axis.text.x = element_text(angle = 90, hjust = 1)) + labs(title="Unfiltered", x="cDNA plate", y="% Ribo Genes")
+
+ggplot(maca_tiss4_filtered@meta.data, aes(x = maca_tiss4_filtered@meta.data$plate, y = maca_tiss4_filtered@meta.data$percent.ribo, fill=tissue)) + geom_boxplot() + theme(axis.text.x = element_text(angle = 90, hjust = 1)) + labs(title="Filtered", x="cDNA plate", y="% Ribo Genes")
+
+ggplot(maca_tiss4_filtered@meta.data, aes(x = maca_tiss4_filtered@meta.data$plate, y = maca_tiss4_filtered@meta.data$Uniquely.mapped.reads.., fill=tissue)) + geom_boxplot() + theme(axis.text.x = element_text(angle = 90, hjust = 1)) + labs(title="Filtered", x="cDNA plate", y="% Uniquely Mapped Reads")
+
+ggplot(maca_tiss4_filtered@meta.data, aes(x = maca_tiss4_filtered@meta.data$plate, y = maca_tiss4_filtered@meta.data$X..of.reads.unmapped..too.short, fill= tissue)) + geom_boxplot()+ theme(axis.text.x = element_text(angle = 90, hjust = 1)) + labs(title="Filtered", x="cDNA plate", y="% Reads Unmapped: Too Short")
+
+dev.off()
+```
+
+
+
+#MACA Run #5
+
+## Filter stats out of data and subset data
+```{r}
+row.names(maca_r5)[grep("__", row.names(maca_r5))]
+dim(maca_r5)
+#Subset the data from the stats
+maca_r5 <- maca_r5[-grep("__", row.names(maca_r5)),]
+dim(maca_r5)
+```
+
+##Make metadata for the run
+```{r}
+#make metadata
+cell_names <- (do.call(rbind, strsplit(colnames(maca_r5), "_")))
+#concatonate well and plates to make cell names
+cell_names_temp <- apply(cell_names, 1, function(x) paste(x[1], x[2], sep = "_"))
+#replace the column names in the gc table with cleaned cell names
+colnames(maca_r5) <- cell_names_temp
+#generate run metadata
+maca_r5_meta <- data.frame(row.names = colnames(maca_r5))
+maca_r5_meta$plate <- cell_names[ ,2]
+maca_r5_meta$well <- cell_names[ ,1]
+maca_r5_meta$run <- 5
+maca_r5_meta$cell.id <- rownames(maca_r5_meta)
+```
+
+##ERCC Stats and Filter
+```{r}
+#Find ERCC's, compute the percent ERCC, and drop them from the raw data
+erccs <- grep(pattern = "^ERCC-", x = rownames(x = maca_r5), value = TRUE)
+percent.ercc <- Matrix::colSums(maca_r5[erccs, ])/Matrix::colSums(maca_r5)
+ercc.index <- grep(pattern = "^ERCC-", x = rownames(x = maca_r5), value = FALSE)
+
+#Remove ERCCs from dataframe
+maca_r5 <- maca_r5[-ercc.index,]
+
+#add percent ERCC's to metadata
+maca_r5_meta$percent.ercc <- percent.ercc
+```
+
+##Append the run's log metadata to the run/plate metadata
+```{r}
+#Subset, transpose, rename the log metadata
+maca_log5<-maca_log5[c(5:9,21:27),]
+maca_log5<-as.data.frame(t(maca_log5), row.names = rownames(maca_r5_meta))
+
+#Convert % to Decimals
+maca_log5<-as.data.frame(apply(maca_log5,2, function(x){
+ as.numeric(sub("%", "", x, fixed=TRUE))}), row.names = row.names(maca_log5))
+
+#Merge with run metadata and clean row names
+maca_r5_meta<-merge(maca_r5_meta, maca_log5, by=0, row.names=T)
+rownames(maca_r5_meta)<-maca_r5_meta[,1]
+maca_r5_meta[,1]<-NULL
+
+#Merge the metadata with the plate metadata
+maca_r5_meta<-merge(maca_r5_meta, maca_meta, by.x = "plate", by.y="X", all.x = T)
+rownames(maca_r5_meta)<-maca_r5_meta$cell.id
+```
+
+##Generate Seurat Object
+```{r}
+maca_tiss5 <- CreateSeuratObject(raw.data = maca_r5, meta.data = maca_r5_meta)
+
+dim(maca_r5_meta)
+dim(maca_r5)
+maca_tiss5
+#The dimensions of the Seurat object will differ from the raw gc table because Seurat filters samples with 0 gene expression values from the dataset. 
+```
+
+##Rename the nUMI and nGene columns of Seurat Object
+```{r}
+colnames(maca_tiss5@meta.data)[colnames(maca_tiss5@meta.data) == 'nUMI'] <- 'nReads'
+colnames(maca_tiss5@meta.data)[colnames(maca_tiss5@meta.data) == 'nGene'] <- 'nGenes'
+```
+
+##Ribogene Metadata
+```{r}
+#Identify ribo genes in the Seurat object and calculate % ribo genes for each cell
+ribo.genes <- grep(pattern = "^Rp[sl][[:digit:]]", x = rownames(x = maca_tiss5@data), value = TRUE)
+percent.ribo <- Matrix::colSums(maca_tiss5@raw.data[ribo.genes, ])/Matrix::colSums(maca_tiss5@raw.data)
+#Add % ribo as a metadata column to the Seurat object
+maca_tiss5 <- AddMetaData(object = maca_tiss5, metadata = percent.ribo, col.name = "percent.ribo")
+```
+
+##Filter cells failing QC in Seurat object
+```{r}
+maca_tiss5_filtered<- FilterCells(maca_tiss5, subset.names = c('nGenes', 'nReads'), low.thresholds = c(500, 50000))
+#Compare the before and after filtered df size
+maca_tiss5
+maca_tiss5_filtered
+```
+
+##Generate QuickStats
+```{r}
+pdf("~/Desktop/run5_quickstats.pdf")
+
+ggplot(maca_tiss5@meta.data, aes(x = maca_tiss5@meta.data$nGenes, y = maca_tiss5@meta.data$nReads, colour = maca_tiss5@meta.data$plate)) + geom_point() + geom_hline(yintercept = 50,000) + geom_vline(xintercept = 500) + scale_y_log10() + guides(colour=guide_legend(title="cDNA plate")) + labs(title="Unfiltered", x="nGenes", y="nReads")
+
+ggplot(maca_tiss5_filtered@meta.data, aes(x = maca_tiss5_filtered@meta.data$nGenes, y = maca_tiss5_filtered@meta.data$nReads, colour = maca_tiss5_filtered@meta.data$plate)) + geom_point() + geom_hline(yintercept = 50,000) + geom_vline(xintercept = 500) + scale_y_log10() + guides(colour=guide_legend(title="cDNA plate")) + labs(title="Filtered", x="nGenes", y="nReads")
+
+ggplot(maca_tiss5_filtered@meta.data, aes(x = maca_tiss5_filtered@meta.data$nGenes, y = maca_tiss5_filtered@meta.data$percent.ercc, colour = maca_tiss5_filtered@meta.data$plate)) + geom_point() + guides(colour=guide_legend(title="cDNA plate")) + scale_x_log10() + scale_y_log10() + labs(title="Filtered", x="nGenes", y="% ERCCS")
+
+ggplot(maca_tiss5@meta.data, aes(x = maca_tiss5@meta.data$plate, fill=tissue)) + geom_bar() + geom_text(stat='count', aes(label=..count..), vjust=-.2) + theme(axis.text.x = element_text(angle = 90, hjust = 1)) + labs(title="Unfiltered", x="cDNA plate")
+
+ggplot(maca_tiss5_filtered@meta.data, aes(x = maca_tiss5_filtered@meta.data$plate, fill=tissue)) + geom_bar() + geom_text(stat='count', aes(label=..count..), vjust=-.2) + theme(axis.text.x = element_text(angle = 90, hjust = 1)) + labs(title="Filtered", x="cDNA plate")
+
+ggplot(maca_tiss5@meta.data, aes(x = maca_tiss5@meta.data$plate, y = maca_tiss5@meta.data$nReads, fill=tissue)) + geom_boxplot() + scale_y_log10() + theme(axis.text.x = element_text(angle = 90, hjust = 1))+ labs(title="Unfiltered", x="cDNA plate", y="nReads")
+
+ggplot(maca_tiss5_filtered@meta.data, aes(x = maca_tiss5_filtered@meta.data$plate, y = maca_tiss5_filtered@meta.data$nReads, fill=tissue)) + geom_boxplot() + scale_y_log10() + theme(axis.text.x = element_text(angle = 90, hjust = 1)) + labs(title="Filtered", x="cDNA plate", y="nReads")
+
+ggplot(maca_tiss5@meta.data, aes(x = maca_tiss5@meta.data$plate, y = maca_tiss5@meta.data$nGenes, fill=tissue)) + geom_boxplot() + scale_y_log10() + theme(axis.text.x = element_text(angle = 90, hjust = 1)) + labs(title="Unfiltered", x="cDNA plate", y="nGenes")
+
+ggplot(maca_tiss5_filtered@meta.data, aes(x = maca_tiss5_filtered@meta.data$plate, y = maca_tiss5_filtered@meta.data$nGenes, fill=tissue)) + geom_boxplot() + scale_y_log10() + theme(axis.text.x = element_text(angle = 90, hjust = 1)) + labs(title="Filtered", x="cDNA plate", y="nGenes")
+
+ggplot(maca_tiss5@meta.data, aes(x = maca_tiss5@meta.data$plate, y = maca_tiss5@meta.data$percent.ercc, fill=tissue)) + geom_boxplot() + theme(axis.text.x = element_text(angle = 90, hjust = 1)) + labs(title="Unfiltered", x="cDNA plate", y="% ERCCS")
+
+ggplot(maca_tiss5_filtered@meta.data, aes(x = maca_tiss5_filtered@meta.data$plate, y = maca_tiss5_filtered@meta.data$percent.ercc, fill=tissue)) + geom_boxplot() + theme(axis.text.x = element_text(angle = 90, hjust = 1)) + labs(title="Filtered", x="cDNA plate", y="% ERCCS")
+
+ggplot(maca_tiss5@meta.data, aes(x = maca_tiss5@meta.data$plate, y = maca_tiss5@meta.data$percent.ribo, fill=tissue)) + geom_boxplot() + theme(axis.text.x = element_text(angle = 90, hjust = 1)) + labs(title="Unfiltered", x="cDNA plate", y="% Ribo Genes")
+
+ggplot(maca_tiss5_filtered@meta.data, aes(x = maca_tiss5_filtered@meta.data$plate, y = maca_tiss5_filtered@meta.data$percent.ribo, fill=tissue)) + geom_boxplot() + theme(axis.text.x = element_text(angle = 90, hjust = 1)) + labs(title="Filtered", x="cDNA plate", y="% Ribo Genes")
+
+ggplot(maca_tiss5_filtered@meta.data, aes(x = maca_tiss5_filtered@meta.data$plate, y = maca_tiss5_filtered@meta.data$Uniquely.mapped.reads.., fill=tissue)) + geom_boxplot() + theme(axis.text.x = element_text(angle = 90, hjust = 1)) + labs(title="Filtered", x="cDNA plate", y="% Uniquely Mapped Reads")
+
+ggplot(maca_tiss5@meta.data, aes(x =maca_tiss5@meta.data$plate, y = maca_tiss5@meta.data$`% of reads unmapped: too short`, fill= tissue)) + geom_boxplot()+ theme(axis.text.x = element_text(angle = 90, hjust = 1)) + labs(title="Unfiltered", x="cDNA plate", y="% Reads Unmapped: Too Short")
+
+ggplot(maca_tiss5_filtered@meta.data, aes(x = maca_tiss5_filtered@meta.data$plate, y = maca_tiss5_filtered@meta.data$X..of.reads.unmapped..too.short, fill= tissue)) + geom_boxplot()+ theme(axis.text.x = element_text(angle = 90, hjust = 1)) + labs(title="Filtered", x="cDNA plate", y="% Reads Unmapped: Too Short")
+
+dev.off()
+```
+
+#MACA Run #6
+
+## Filter stats out of data and subset data
+```{r}
+row.names(maca_r6)[grep("__", row.names(maca_r6))]
+dim(maca_r6)
+#Subset the data from the stats
+maca_r6 <- maca_r6[-grep("__", row.names(maca_r6)),]
+dim(maca_r6)
+```
+
+##Make metadata for the run
+```{r}
+#make metadata
+cell_names <- (do.call(rbind, strsplit(colnames(maca_r6), "_")))
+#concatonate well and plates to make cell names
+cell_names_temp <- apply(cell_names, 1, function(x) paste(x[1], x[2], sep = "_"))
+#replace the column names in the gc table with cleaned cell names
+colnames(maca_r6) <- cell_names_temp
+#generate run metadata
+maca_r6_meta <- data.frame(row.names = colnames(maca_r6))
+maca_r6_meta$plate <- cell_names[ ,2]
+maca_r6_meta$well <- cell_names[ ,1]
+maca_r6_meta$run <- 6
+maca_r6_meta$cell.id <- rownames(maca_r6_meta)
+```
+
+##ERCC Stats and Filter
+```{r}
+#Find ERCC's, compute the percent ERCC, and drop them from the raw data
+erccs <- grep(pattern = "^ERCC-", x = rownames(x = maca_r6), value = TRUE)
+percent.ercc <- Matrix::colSums(maca_r6[erccs, ])/Matrix::colSums(maca_r6)
+ercc.index <- grep(pattern = "^ERCC-", x = rownames(x = maca_r6), value = FALSE)
+
+#Remove ERCCs from dataframe
+maca_r6 <- maca_r6[-ercc.index,]
+
+#add percent ERCC's to metadata
+maca_r6_meta$percent.ercc <- percent.ercc
+```
+
+##Append the run's log metadata to the run/plate metadata
+```{r}
+#Subset, transpose, rename the log metadata
+maca_log6<-maca_log6[c(5:9,21:27),]
+maca_log6<-as.data.frame(t(maca_log6), row.names = rownames(maca_r6_meta))
+
+#Convert % to Decimals
+maca_log6<-as.data.frame(apply(maca_log6,2, function(x){
+ as.numeric(sub("%", "", x, fixed=TRUE))}), row.names = row.names(maca_log6))
+
+#Merge with run metadata and clean row names
+maca_r6_meta<-merge(maca_r6_meta, maca_log6, by=0, row.names=T)
+rownames(maca_r6_meta)<-maca_r6_meta[,1]
+maca_r6_meta[,1]<-NULL
+
+#Merge the metadata with the plate metadata
+maca_r6_meta<-merge(maca_r6_meta, maca_meta, by.x = "plate", by.y="X", all.x = T)
+rownames(maca_r6_meta)<-maca_r6_meta$cell.id
+```
+
+##Generate Seurat Object
+```{r}
+maca_tiss6 <- CreateSeuratObject(raw.data = maca_r6, meta.data = maca_r6_meta)
+
+dim(maca_r6_meta)
+dim(maca_r6)
+maca_tiss6
+#The dimensions of the Seurat object will differ from the raw gc table because Seurat filters samples with 0 gene expression values from the dataset. 
+```
+
+##Rename the nUMI and nGene columns of Seurat Object
+```{r}
+colnames(maca_tiss6@meta.data)[colnames(maca_tiss6@meta.data) == 'nUMI'] <- 'nReads'
+colnames(maca_tiss6@meta.data)[colnames(maca_tiss6@meta.data) == 'nGene'] <- 'nGenes'
+```
+
+##Ribogene Metadata
+```{r}
+#Identify ribo genes in the Seurat object and calculate % ribo genes for each cell
+ribo.genes <- grep(pattern = "^Rp[sl][[:digit:]]", x = rownames(x = maca_tiss6@data), value = TRUE)
+percent.ribo <- Matrix::colSums(maca_tiss6@raw.data[ribo.genes, ])/Matrix::colSums(maca_tiss6@raw.data)
+#Add % ribo as a metadata column to the Seurat object
+maca_tiss6 <- AddMetaData(object = maca_tiss6, metadata = percent.ribo, col.name = "percent.ribo")
+```
+
+##Filter cells failing QC in Seurat object
+```{r}
+maca_tiss6_filtered<- FilterCells(maca_tiss6, subset.names = c('nGenes', 'nReads'), low.thresholds = c(500, 50000))
+#Compare the before and after filtered df size
+maca_tiss6
+maca_tiss6_filtered
+```
+
+##Generate QuickStats
+```{r}
+pdf("~/Desktop/run6_quickstats.pdf")
+
+ggplot(maca_tiss6@meta.data, aes(x = maca_tiss6@meta.data$nGenes, y = maca_tiss6@meta.data$nReads, colour = maca_tiss6@meta.data$plate)) + geom_point() + geom_hline(yintercept = 50,000) + geom_vline(xintercept = 500) + scale_y_log10() + guides(colour=guide_legend(title="cDNA plate")) + labs(title="Unfiltered", x="nGenes", y="nReads")
+
+ggplot(maca_tiss6_filtered@meta.data, aes(x = maca_tiss6_filtered@meta.data$nGenes, y = maca_tiss6_filtered@meta.data$nReads, colour = maca_tiss6_filtered@meta.data$plate)) + geom_point() + geom_hline(yintercept = 50,000) + geom_vline(xintercept = 500) + scale_y_log10() + guides(colour=guide_legend(title="cDNA plate")) + labs(title="Filtered", x="nGenes", y="nReads")
+
+ggplot(maca_tiss6_filtered@meta.data, aes(x = maca_tiss6_filtered@meta.data$nGenes, y = maca_tiss6_filtered@meta.data$percent.ercc, colour = maca_tiss6_filtered@meta.data$plate)) + geom_point() + guides(colour=guide_legend(title="cDNA plate")) + scale_x_log10() + scale_y_log10() + labs(title="Filtered", x="nGenes", y="% ERCCS")
+
+ggplot(maca_tiss6@meta.data, aes(x = maca_tiss6@meta.data$plate, fill=tissue)) + geom_bar() + geom_text(stat='count', aes(label=..count..), vjust=-.2) + theme(axis.text.x = element_text(angle = 90, hjust = 1)) + labs(title="Unfiltered", x="cDNA plate")
+
+ggplot(maca_tiss6_filtered@meta.data, aes(x = maca_tiss6_filtered@meta.data$plate, fill=tissue)) + geom_bar() + geom_text(stat='count', aes(label=..count..), vjust=-.2) + theme(axis.text.x = element_text(angle = 90, hjust = 1)) + labs(title="Filtered", x="cDNA plate")
+
+ggplot(maca_tiss6@meta.data, aes(x = maca_tiss6@meta.data$plate, y = maca_tiss6@meta.data$nReads, fill=tissue)) + geom_boxplot() + scale_y_log10() + theme(axis.text.x = element_text(angle = 90, hjust = 1))+ labs(title="Unfiltered", x="cDNA plate", y="nReads")
+
+ggplot(maca_tiss6_filtered@meta.data, aes(x = maca_tiss6_filtered@meta.data$plate, y = maca_tiss6_filtered@meta.data$nReads, fill=tissue)) + geom_boxplot() + scale_y_log10() + theme(axis.text.x = element_text(angle = 90, hjust = 1)) + labs(title="Filtered", x="cDNA plate", y="nReads")
+
+ggplot(maca_tiss6@meta.data, aes(x = maca_tiss6@meta.data$plate, y = maca_tiss6@meta.data$nGenes, fill=tissue)) + geom_boxplot() + scale_y_log10() + theme(axis.text.x = element_text(angle = 90, hjust = 1)) + labs(title="Unfiltered", x="cDNA plate", y="nGenes")
+
+ggplot(maca_tiss6_filtered@meta.data, aes(x = maca_tiss6_filtered@meta.data$plate, y = maca_tiss6_filtered@meta.data$nGenes, fill=tissue)) + geom_boxplot() + scale_y_log10() + theme(axis.text.x = element_text(angle = 90, hjust = 1)) + labs(title="Filtered", x="cDNA plate", y="nGenes")
+
+ggplot(maca_tiss6@meta.data, aes(x = maca_tiss6@meta.data$plate, y = maca_tiss6@meta.data$percent.ercc, fill=tissue)) + geom_boxplot() + theme(axis.text.x = element_text(angle = 90, hjust = 1)) + labs(title="Unfiltered", x="cDNA plate", y="% ERCCS")
+
+ggplot(maca_tiss6_filtered@meta.data, aes(x = maca_tiss6_filtered@meta.data$plate, y = maca_tiss6_filtered@meta.data$percent.ercc, fill=tissue)) + geom_boxplot() + theme(axis.text.x = element_text(angle = 90, hjust = 1)) + labs(title="Filtered", x="cDNA plate", y="% ERCCS")
+
+ggplot(maca_tiss6@meta.data, aes(x = maca_tiss6@meta.data$plate, y = maca_tiss6@meta.data$percent.ribo, fill=tissue)) + geom_boxplot() + theme(axis.text.x = element_text(angle = 90, hjust = 1)) + labs(title="Unfiltered", x="cDNA plate", y="% Ribo Genes")
+
+ggplot(maca_tiss6_filtered@meta.data, aes(x = maca_tiss6_filtered@meta.data$plate, y = maca_tiss6_filtered@meta.data$percent.ribo, fill=tissue)) + geom_boxplot() + theme(axis.text.x = element_text(angle = 90, hjust = 1)) + labs(title="Filtered", x="cDNA plate", y="% Ribo Genes")
+
+ggplot(maca_tiss6_filtered@meta.data, aes(x = maca_tiss6_filtered@meta.data$plate, y = maca_tiss6_filtered@meta.data$Uniquely.mapped.reads.., fill=tissue)) + geom_boxplot() + theme(axis.text.x = element_text(angle = 90, hjust = 1)) + labs(title="Filtered", x="cDNA plate", y="% Uniquely Mapped Reads")
+
+ggplot(maca_tiss6@meta.data, aes(x =maca_tiss6@meta.data$plate, y = maca_tiss6@meta.data$`% of reads unmapped: too short`, fill= tissue)) + geom_boxplot()+ theme(axis.text.x = element_text(angle = 90, hjust = 1)) + labs(title="Unfiltered", x="cDNA plate", y="% Reads Unmapped: Too Short")
+
+ggplot(maca_tiss6_filtered@meta.data, aes(x = maca_tiss6_filtered@meta.data$plate, y = maca_tiss6_filtered@meta.data$X..of.reads.unmapped..too.short, fill= tissue)) + geom_boxplot()+ theme(axis.text.x = element_text(angle = 90, hjust = 1)) + labs(title="Filtered", x="cDNA plate", y="% Reads Unmapped: Too Short")
+
+dev.off()
+```
+
+
+#MACA Run #7
+
+## Filter stats out of data and subset data
+```{r}
+row.names(maca_r7)[grep("__", row.names(maca_r7))]
+dim(maca_r7)
+#Subset the data from the stats
+maca_r7 <- maca_r7[-grep("__", row.names(maca_r7)),]
+dim(maca_r7)
+```
+
+##Make metadata for the run
+```{r}
+#make metadata
+cell_names <- (do.call(rbind, strsplit(colnames(maca_r7), "_")))
+#concatonate well and plates to make cell names
+cell_names_temp <- apply(cell_names, 1, function(x) paste(x[1], x[2], sep = "_"))
+#replace the column names in the gc table with cleaned cell names
+colnames(maca_r7) <- cell_names_temp
+#generate run metadata
+maca_r7_meta <- data.frame(row.names = colnames(maca_r7))
+maca_r7_meta$plate <- cell_names[ ,2]
+maca_r7_meta$well <- cell_names[ ,1]
+maca_r7_meta$run <- 7
+maca_r7_meta$cell.id <- rownames(maca_r7_meta)
+```
+
+##ERCC Stats and Filter
+```{r}
+#Find ERCC's, compute the percent ERCC, and drop them from the raw data
+erccs <- grep(pattern = "^ERCC-", x = rownames(x = maca_r7), value = TRUE)
+percent.ercc <- Matrix::colSums(maca_r7[erccs, ])/Matrix::colSums(maca_r7)
+ercc.index <- grep(pattern = "^ERCC-", x = rownames(x = maca_r7), value = FALSE)
+
+#Remove ERCCs from dataframe
+maca_r7 <- maca_r7[-ercc.index,]
+
+#add percent ERCC's to metadata
+maca_r7_meta$percent.ercc <- percent.ercc
+```
+
+##Append the run's log metadata to the run/plate metadata
+```{r}
+#Subset, transpose, rename the log metadata
+maca_log7<-maca_log7[c(5:9,21:27),]
+maca_log7<-as.data.frame(t(maca_log7), row.names = rownames(maca_r7_meta))
+
+#Convert % to Decimals
+maca_log7<-as.data.frame(apply(maca_log7,2, function(x){
+ as.numeric(sub("%", "", x, fixed=TRUE))}), row.names = row.names(maca_log7))
+
+#Merge with run metadata and clean row names
+maca_r7_meta<-merge(maca_r7_meta, maca_log7, by=0, row.names=T)
+rownames(maca_r7_meta)<-maca_r7_meta[,1]
+maca_r7_meta[,1]<-NULL
+
+#Merge the metadata with the plate metadata
+maca_r7_meta<-merge(maca_r7_meta, maca_meta, by.x = "plate", by.y="X", all.x = T)
+rownames(maca_r7_meta)<-maca_r7_meta$cell.id
+```
+
+##Generate Seurat Object
+```{r}
+maca_tiss7 <- CreateSeuratObject(raw.data = maca_r7, meta.data = maca_r7_meta)
+
+dim(maca_r7_meta)
+dim(maca_r7)
+maca_tiss7
+#The dimensions of the Seurat object will differ from the raw gc table because Seurat filters samples with 0 gene expression values from the dataset. 
+```
+
+##Rename the nUMI and nGene columns of Seurat Object
+```{r}
+colnames(maca_tiss7@meta.data)[colnames(maca_tiss7@meta.data) == 'nUMI'] <- 'nReads'
+colnames(maca_tiss7@meta.data)[colnames(maca_tiss7@meta.data) == 'nGene'] <- 'nGenes'
+```
+
+##Ribogene Metadata
+```{r}
+#Identify ribo genes in the Seurat object and calculate % ribo genes for each cell
+ribo.genes <- grep(pattern = "^Rp[sl][[:digit:]]", x = rownames(x = maca_tiss7@data), value = TRUE)
+percent.ribo <- Matrix::colSums(maca_tiss7@raw.data[ribo.genes, ])/Matrix::colSums(maca_tiss7@raw.data)
+#Add % ribo as a metadata column to the Seurat object
+maca_tiss7 <- AddMetaData(object = maca_tiss7, metadata = percent.ribo, col.name = "percent.ribo")
+```
+
+##Filter cells failing QC in Seurat object
+```{r}
+maca_tiss7_filtered<- FilterCells(maca_tiss7, subset.names = c('nGenes', 'nReads'), low.thresholds = c(500, 50000))
+#Compare the before and after filtered df size
+maca_tiss7
+maca_tiss7_filtered
+```
+
+##Generate QuickStats
+```{r}
+pdf("~/Desktop/run7_quickstats.pdf")
+
+ggplot(maca_tiss7@meta.data, aes(x = maca_tiss7@meta.data$nGenes, y = maca_tiss7@meta.data$nReads, colour = maca_tiss7@meta.data$plate)) + geom_point() + geom_hline(yintercept = 50,000) + geom_vline(xintercept = 500) + scale_y_log10() + guides(colour=guide_legend(title="cDNA plate")) + labs(title="Unfiltered", x="nGenes", y="nReads")
+
+ggplot(maca_tiss7_filtered@meta.data, aes(x = maca_tiss7_filtered@meta.data$nGenes, y = maca_tiss7_filtered@meta.data$nReads, colour = maca_tiss7_filtered@meta.data$plate)) + geom_point() + geom_hline(yintercept = 50,000) + geom_vline(xintercept = 500) + scale_y_log10() + guides(colour=guide_legend(title="cDNA plate")) + labs(title="Filtered", x="nGenes", y="nReads")
+
+ggplot(maca_tiss7_filtered@meta.data, aes(x = maca_tiss7_filtered@meta.data$nGenes, y = maca_tiss7_filtered@meta.data$percent.ercc, colour = maca_tiss7_filtered@meta.data$plate)) + geom_point() + guides(colour=guide_legend(title="cDNA plate")) + scale_x_log10() + scale_y_log10() + labs(title="Filtered", x="nGenes", y="% ERCCS")
+
+ggplot(maca_tiss7@meta.data, aes(x = maca_tiss7@meta.data$plate, fill=tissue)) + geom_bar() + geom_text(stat='count', aes(label=..count..), vjust=-.2) + theme(axis.text.x = element_text(angle = 90, hjust = 1)) + labs(title="Unfiltered", x="cDNA plate")
+
+ggplot(maca_tiss7_filtered@meta.data, aes(x = maca_tiss7_filtered@meta.data$plate, fill=tissue)) + geom_bar() + geom_text(stat='count', aes(label=..count..), vjust=-.2) + theme(axis.text.x = element_text(angle = 90, hjust = 1)) + labs(title="Filtered", x="cDNA plate")
+
+ggplot(maca_tiss7@meta.data, aes(x = maca_tiss7@meta.data$plate, y = maca_tiss7@meta.data$nReads, fill=tissue)) + geom_boxplot() + scale_y_log10() + theme(axis.text.x = element_text(angle = 90, hjust = 1))+ labs(title="Unfiltered", x="cDNA plate", y="nReads")
+
+ggplot(maca_tiss7_filtered@meta.data, aes(x = maca_tiss7_filtered@meta.data$plate, y = maca_tiss7_filtered@meta.data$nReads, fill=tissue)) + geom_boxplot() + scale_y_log10() + theme(axis.text.x = element_text(angle = 90, hjust = 1)) + labs(title="Filtered", x="cDNA plate", y="nReads")
+
+ggplot(maca_tiss7@meta.data, aes(x = maca_tiss7@meta.data$plate, y = maca_tiss7@meta.data$nGenes, fill=tissue)) + geom_boxplot() + scale_y_log10() + theme(axis.text.x = element_text(angle = 90, hjust = 1)) + labs(title="Unfiltered", x="cDNA plate", y="nGenes")
+
+ggplot(maca_tiss7_filtered@meta.data, aes(x = maca_tiss7_filtered@meta.data$plate, y = maca_tiss7_filtered@meta.data$nGenes, fill=tissue)) + geom_boxplot() + scale_y_log10() + theme(axis.text.x = element_text(angle = 90, hjust = 1)) + labs(title="Filtered", x="cDNA plate", y="nGenes")
+
+ggplot(maca_tiss7@meta.data, aes(x = maca_tiss7@meta.data$plate, y = maca_tiss7@meta.data$percent.ercc, fill=tissue)) + geom_boxplot() + theme(axis.text.x = element_text(angle = 90, hjust = 1)) + labs(title="Unfiltered", x="cDNA plate", y="% ERCCS")
+
+ggplot(maca_tiss7_filtered@meta.data, aes(x = maca_tiss7_filtered@meta.data$plate, y = maca_tiss7_filtered@meta.data$percent.ercc, fill=tissue)) + geom_boxplot() + theme(axis.text.x = element_text(angle = 90, hjust = 1)) + labs(title="Filtered", x="cDNA plate", y="% ERCCS")
+
+ggplot(maca_tiss7@meta.data, aes(x = maca_tiss7@meta.data$plate, y = maca_tiss7@meta.data$percent.ribo, fill=tissue)) + geom_boxplot() + theme(axis.text.x = element_text(angle = 90, hjust = 1)) + labs(title="Unfiltered", x="cDNA plate", y="% Ribo Genes")
+
+ggplot(maca_tiss7_filtered@meta.data, aes(x = maca_tiss7_filtered@meta.data$plate, y = maca_tiss7_filtered@meta.data$percent.ribo, fill=tissue)) + geom_boxplot() + theme(axis.text.x = element_text(angle = 90, hjust = 1)) + labs(title="Filtered", x="cDNA plate", y="% Ribo Genes")
+
+ggplot(maca_tiss7_filtered@meta.data, aes(x = maca_tiss7_filtered@meta.data$plate, y = maca_tiss7_filtered@meta.data$Uniquely.mapped.reads.., fill=tissue)) + geom_boxplot() + theme(axis.text.x = element_text(angle = 90, hjust = 1)) + labs(title="Filtered", x="cDNA plate", y="% Uniquely Mapped Reads")
+
+ggplot(maca_tiss7@meta.data, aes(x =maca_tiss7@meta.data$plate, y = maca_tiss7@meta.data$`% of reads unmapped: too short`, fill= tissue)) + geom_boxplot()+ theme(axis.text.x = element_text(angle = 90, hjust = 1)) + labs(title="Unfiltered", x="cDNA plate", y="% Reads Unmapped: Too Short")
+
+ggplot(maca_tiss7_filtered@meta.data, aes(x = maca_tiss7_filtered@meta.data$plate, y = maca_tiss7_filtered@meta.data$X..of.reads.unmapped..too.short, fill= tissue)) + geom_boxplot()+ theme(axis.text.x = element_text(angle = 90, hjust = 1)) + labs(title="Filtered", x="cDNA plate", y="% Reads Unmapped: Too Short")
+
+dev.off()
+```
+
+
+
+#MACA Run #8 (Run5 Rerun)
+## Filter stats out of data and subset data
+```{r}
+row.names(maca_r8)[grep("__", row.names(maca_r8))]
+dim(maca_r8)
+#Subset the data from the stats
+maca_r8 <- maca_r8[-grep("__", row.names(maca_r8)),]
+dim(maca_r8)
+```
+
+##Make metadata for the run
+```{r}
+#make metadata
+cell_names <- (do.call(rbind, strsplit(colnames(maca_r8), "_")))
+#concatonate well and plates to make cell names
+cell_names_temp <- apply(cell_names, 1, function(x) paste(x[1], x[2], sep = "_"))
+#replace the column names in the gc table with cleaned cell names
+colnames(maca_r8) <- cell_names_temp
+#generate run metadata
+maca_r8_meta <- data.frame(row.names = colnames(maca_r8))
+maca_r8_meta$plate <- cell_names[ ,2]
+maca_r8_meta$well <- cell_names[ ,1]
+maca_r8_meta$run <- 8
+maca_r8_meta$cell.id <- rownames(maca_r8_meta)
+```
+
+##ERCC Stats and Filter
+```{r}
+#Find ERCC's, compute the percent ERCC, and drop them from the raw data
+erccs <- grep(pattern = "^ERCC-", x = rownames(x = maca_r8), value = TRUE)
+percent.ercc <- Matrix::colSums(maca_r8[erccs, ])/Matrix::colSums(maca_r8)
+ercc.index <- grep(pattern = "^ERCC-", x = rownames(x = maca_r8), value = FALSE)
+
+#Remove ERCCs from dataframe
+maca_r8 <- maca_r8[-ercc.index,]
+
+#add percent ERCC's to metadata
+maca_r8_meta$percent.ercc <- percent.ercc
+```
+
+##Append the run's log metadata to the run/plate metadata
+```{r}
+#Subset, transpose, rename the log metadata
+maca_log8<-maca_log8[c(5:9,21:27),]
+maca_log8<-as.data.frame(t(maca_log8), row.names = rownames(maca_r8_meta))
+
+#Convert % to Decimals
+maca_log8<-as.data.frame(apply(maca_log8,2, function(x){
+ as.numeric(sub("%", "", x, fixed=TRUE))}), row.names = row.names(maca_log8))
+
+#Merge with run metadata and clean row names
+maca_r8_meta<-merge(maca_r8_meta, maca_log8, by=0, row.names=T)
+rownames(maca_r8_meta)<-maca_r8_meta[,1]
+maca_r8_meta[,1]<-NULL
+
+#Merge the metadata with the plate metadata
+maca_r8_meta<-merge(maca_r8_meta, maca_meta, by.x = "plate", by.y="X", all.x = T)
+rownames(maca_r8_meta)<-maca_r8_meta$cell.id
+```
+
+##Generate Seurat Object
+```{r}
+maca_tiss8 <- CreateSeuratObject(raw.data = maca_r8, meta.data = maca_r8_meta)
+
+dim(maca_r8_meta)
+dim(maca_r8)
+maca_tiss8
+#The dimensions of the Seurat object will differ from the raw gc table because Seurat filters samples with 0 gene expression values from the dataset. 
+```
+
+##Rename the nUMI and nGene columns of Seurat Object
+```{r}
+colnames(maca_tiss8@meta.data)[colnames(maca_tiss8@meta.data) == 'nUMI'] <- 'nReads'
+colnames(maca_tiss8@meta.data)[colnames(maca_tiss8@meta.data) == 'nGene'] <- 'nGenes'
+```
+
+##Ribogene Metadata
+```{r}
+#Identify ribo genes in the Seurat object and calculate % ribo genes for each cell
+ribo.genes <- grep(pattern = "^Rp[sl][[:digit:]]", x = rownames(x = maca_tiss8@data), value = TRUE)
+percent.ribo <- Matrix::colSums(maca_tiss8@raw.data[ribo.genes, ])/Matrix::colSums(maca_tiss8@raw.data)
+#Add % ribo as a metadata column to the Seurat object
+maca_tiss8 <- AddMetaData(object = maca_tiss8, metadata = percent.ribo, col.name = "percent.ribo")
+```
+
+##Filter cells failing QC in Seurat object
+```{r}
+maca_tiss8_filtered<- FilterCells(maca_tiss8, subset.names = c('nGenes', 'nReads'), low.thresholds = c(500, 50000))
+#Compare the before and after filtered df size
+maca_tiss8
+maca_tiss8_filtered
+```
+
+##Generate QuickStats
+```{r}
+pdf("~/Desktop/run8_quickstats.pdf")
+
+ggplot(maca_tiss8@meta.data, aes(x = maca_tiss8@meta.data$nGenes, y = maca_tiss8@meta.data$nReads, colour = maca_tiss8@meta.data$plate)) + geom_point() + geom_hline(yintercept = 50,000) + geom_vline(xintercept = 500) + scale_y_log10() + guides(colour=guide_legend(title="cDNA plate")) + labs(title="Unfiltered", x="nGenes", y="nReads")
+
+ggplot(maca_tiss8_filtered@meta.data, aes(x = maca_tiss8_filtered@meta.data$nGenes, y = maca_tiss8_filtered@meta.data$nReads, colour = maca_tiss8_filtered@meta.data$plate)) + geom_point() + geom_hline(yintercept = 50,000) + geom_vline(xintercept = 500) + scale_y_log10() + guides(colour=guide_legend(title="cDNA plate")) + labs(title="Filtered", x="nGenes", y="nReads")
+
+ggplot(maca_tiss8_filtered@meta.data, aes(x = maca_tiss8_filtered@meta.data$nGenes, y = maca_tiss8_filtered@meta.data$percent.ercc, colour = maca_tiss8_filtered@meta.data$plate)) + geom_point() + guides(colour=guide_legend(title="cDNA plate")) + scale_x_log10() + scale_y_log10() + labs(title="Filtered", x="nGenes", y="% ERCCS")
+
+ggplot(maca_tiss8@meta.data, aes(x = maca_tiss8@meta.data$plate, fill=tissue)) + geom_bar() + geom_text(stat='count', aes(label=..count..), vjust=-.2) + theme(axis.text.x = element_text(angle = 90, hjust = 1)) + labs(title="Unfiltered", x="cDNA plate")
+
+ggplot(maca_tiss8_filtered@meta.data, aes(x = maca_tiss8_filtered@meta.data$plate, fill=tissue)) + geom_bar() + geom_text(stat='count', aes(label=..count..), vjust=-.2) + theme(axis.text.x = element_text(angle = 90, hjust = 1)) + labs(title="Filtered", x="cDNA plate")
+
+ggplot(maca_tiss8@meta.data, aes(x = maca_tiss8@meta.data$plate, y = maca_tiss8@meta.data$nReads, fill=tissue)) + geom_boxplot() + scale_y_log10() + theme(axis.text.x = element_text(angle = 90, hjust = 1))+ labs(title="Unfiltered", x="cDNA plate", y="nReads")
+
+ggplot(maca_tiss8_filtered@meta.data, aes(x = maca_tiss8_filtered@meta.data$plate, y = maca_tiss8_filtered@meta.data$nReads, fill=tissue)) + geom_boxplot() + scale_y_log10() + theme(axis.text.x = element_text(angle = 90, hjust = 1)) + labs(title="Filtered", x="cDNA plate", y="nReads")
+
+ggplot(maca_tiss8@meta.data, aes(x = maca_tiss8@meta.data$plate, y = maca_tiss8@meta.data$nGenes, fill=tissue)) + geom_boxplot() + scale_y_log10() + theme(axis.text.x = element_text(angle = 90, hjust = 1)) + labs(title="Unfiltered", x="cDNA plate", y="nGenes")
+
+ggplot(maca_tiss8_filtered@meta.data, aes(x = maca_tiss8_filtered@meta.data$plate, y = maca_tiss8_filtered@meta.data$nGenes, fill=tissue)) + geom_boxplot() + scale_y_log10() + theme(axis.text.x = element_text(angle = 90, hjust = 1)) + labs(title="Filtered", x="cDNA plate", y="nGenes")
+
+ggplot(maca_tiss8@meta.data, aes(x = maca_tiss8@meta.data$plate, y = maca_tiss8@meta.data$percent.ercc, fill=tissue)) + geom_boxplot() + theme(axis.text.x = element_text(angle = 90, hjust = 1)) + labs(title="Unfiltered", x="cDNA plate", y="% ERCCS")
+
+ggplot(maca_tiss8_filtered@meta.data, aes(x = maca_tiss8_filtered@meta.data$plate, y = maca_tiss8_filtered@meta.data$percent.ercc, fill=tissue)) + geom_boxplot() + theme(axis.text.x = element_text(angle = 90, hjust = 1)) + labs(title="Filtered", x="cDNA plate", y="% ERCCS")
+
+ggplot(maca_tiss8@meta.data, aes(x = maca_tiss8@meta.data$plate, y = maca_tiss8@meta.data$percent.ribo, fill=tissue)) + geom_boxplot() + theme(axis.text.x = element_text(angle = 90, hjust = 1)) + labs(title="Unfiltered", x="cDNA plate", y="% Ribo Genes")
+
+ggplot(maca_tiss8_filtered@meta.data, aes(x = maca_tiss8_filtered@meta.data$plate, y = maca_tiss8_filtered@meta.data$percent.ribo, fill=tissue)) + geom_boxplot() + theme(axis.text.x = element_text(angle = 90, hjust = 1)) + labs(title="Filtered", x="cDNA plate", y="% Ribo Genes")
+
+ggplot(maca_tiss8_filtered@meta.data, aes(x = maca_tiss8_filtered@meta.data$plate, y = maca_tiss8_filtered@meta.data$Uniquely.mapped.reads.., fill=tissue)) + geom_boxplot() + theme(axis.text.x = element_text(angle = 90, hjust = 1)) + labs(title="Filtered", x="cDNA plate", y="% Uniquely Mapped Reads")
+
+ggplot(maca_tiss8@meta.data, aes(x =maca_tiss8@meta.data$plate, y = maca_tiss8@meta.data$`% of reads unmapped: too short`, fill= tissue)) + geom_boxplot()+ theme(axis.text.x = element_text(angle = 90, hjust = 1)) + labs(title="Unfiltered", x="cDNA plate", y="% Reads Unmapped: Too Short")
+
+ggplot(maca_tiss8_filtered@meta.data, aes(x = maca_tiss8_filtered@meta.data$plate, y = maca_tiss8_filtered@meta.data$X..of.reads.unmapped..too.short, fill= tissue)) + geom_boxplot()+ theme(axis.text.x = element_text(angle = 90, hjust = 1)) + labs(title="Filtered", x="cDNA plate", y="% Reads Unmapped: Too Short")
+
+dev.off()
+```
+
+#MACA Run #9
+## Filter stats out of data and subset data
+```{r}
+row.names(maca_r9)[grep("__", row.names(maca_r9))]
+dim(maca_r9)
+#Subset the data from the stats
+maca_r9 <- maca_r9[-grep("__", row.names(maca_r9)),]
+dim(maca_r9)
+```
+
+##Make metadata for the run
+```{r}
+#make metadata
+cell_names <- (do.call(rbind, strsplit(colnames(maca_r9), "_")))
+#concatonate well and plates to make cell names
+cell_names_temp <- apply(cell_names, 1, function(x) paste(x[1], x[2], sep = "_"))
+#replace the column names in the gc table with cleaned cell names
+colnames(maca_r9) <- cell_names_temp
+#generate run metadata
+maca_r9_meta <- data.frame(row.names = colnames(maca_r9))
+maca_r9_meta$plate <- cell_names[ ,2]
+maca_r9_meta$well <- cell_names[ ,1]
+maca_r9_meta$run <- 9
+maca_r9_meta$cell.id <- rownames(maca_r9_meta)
+```
+
+##ERCC Stats and Filter
+```{r}
+#Find ERCC's, compute the percent ERCC, and drop them from the raw data
+erccs <- grep(pattern = "^ERCC-", x = rownames(x = maca_r9), value = TRUE)
+percent.ercc <- Matrix::colSums(maca_r9[erccs, ])/Matrix::colSums(maca_r9)
+ercc.index <- grep(pattern = "^ERCC-", x = rownames(x = maca_r9), value = FALSE)
+
+#Remove ERCCs from dataframe
+maca_r9 <- maca_r9[-ercc.index,]
+
+#add percent ERCC's to metadata
+maca_r9_meta$percent.ercc <- percent.ercc
+```
+
+##Append the run's log metadata to the run/plate metadata
+```{r}
+#Subset, transpose, rename the log metadata
+maca_log9<-maca_log9[c(5:9,21:27),]
+maca_log9<-as.data.frame(t(maca_log9), row.names = rownames(maca_r9_meta))
+
+#Convert % to Decimals
+maca_log9<-as.data.frame(apply(maca_log9,2, function(x){
+ as.numeric(sub("%", "", x, fixed=TRUE))}), row.names = row.names(maca_log9))
+
+#Merge with run metadata and clean row names
+maca_r9_meta<-merge(maca_r9_meta, maca_log9, by=0, row.names=T)
+rownames(maca_r9_meta)<-maca_r9_meta[,1]
+maca_r9_meta[,1]<-NULL
+
+#Merge the metadata with the plate metadata
+maca_r9_meta<-merge(maca_r9_meta, maca_meta, by.x = "plate", by.y="X", all.x = T)
+rownames(maca_r9_meta)<-maca_r9_meta$cell.id
+```
+
+##Generate Seurat Object
+```{r}
+maca_tiss9 <- CreateSeuratObject(raw.data = maca_r9, meta.data = maca_r9_meta)
+
+dim(maca_r9_meta)
+dim(maca_r9)
+maca_tiss9
+#The dimensions of the Seurat object will differ from the raw gc table because Seurat filters samples with 0 gene expression values from the dataset. 
+```
+
+##Rename the nUMI and nGene columns of Seurat Object
+```{r}
+colnames(maca_tiss9@meta.data)[colnames(maca_tiss9@meta.data) == 'nUMI'] <- 'nReads'
+colnames(maca_tiss9@meta.data)[colnames(maca_tiss9@meta.data) == 'nGene'] <- 'nGenes'
+```
+
+##Ribogene Metadata
+```{r}
+#Identify ribo genes in the Seurat object and calculate % ribo genes for each cell
+ribo.genes <- grep(pattern = "^Rp[sl][[:digit:]]", x = rownames(x = maca_tiss9@data), value = TRUE)
+percent.ribo <- Matrix::colSums(maca_tiss9@raw.data[ribo.genes, ])/Matrix::colSums(maca_tiss9@raw.data)
+#Add % ribo as a metadata column to the Seurat object
+maca_tiss9 <- AddMetaData(object = maca_tiss9, metadata = percent.ribo, col.name = "percent.ribo")
+```
+
+##Filter cells failing QC in Seurat object
+```{r}
+maca_tiss9_filtered<- FilterCells(maca_tiss9, subset.names = c('nGenes', 'nReads'), low.thresholds = c(500, 50000))
+#Compare the before and after filtered df size
+maca_tiss9
+maca_tiss9_filtered
+```
+
+##Generate QuickStats
+```{r}
+pdf("~/Desktop/run9_quickstats.pdf")
+
+ggplot(maca_tiss9@meta.data, aes(x = maca_tiss9@meta.data$nGenes, y = maca_tiss9@meta.data$nReads, colour = maca_tiss9@meta.data$plate)) + geom_point() + geom_hline(yintercept = 50,000) + geom_vline(xintercept = 500) + scale_y_log10() + guides(colour=guide_legend(title="cDNA plate")) + labs(title="Unfiltered", x="nGenes", y="nReads")
+
+ggplot(maca_tiss9_filtered@meta.data, aes(x = maca_tiss9_filtered@meta.data$nGenes, y = maca_tiss9_filtered@meta.data$nReads, colour = maca_tiss9_filtered@meta.data$plate)) + geom_point() + geom_hline(yintercept = 50,000) + geom_vline(xintercept = 500) + scale_y_log10() + guides(colour=guide_legend(title="cDNA plate")) + labs(title="Filtered", x="nGenes", y="nReads")
+
+ggplot(maca_tiss9_filtered@meta.data, aes(x = maca_tiss9_filtered@meta.data$nGenes, y = maca_tiss9_filtered@meta.data$percent.ercc, colour = maca_tiss9_filtered@meta.data$plate)) + geom_point() + guides(colour=guide_legend(title="cDNA plate")) + scale_x_log10() + scale_y_log10() + labs(title="Filtered", x="nGenes", y="% ERCCS")
+
+ggplot(maca_tiss9@meta.data, aes(x = maca_tiss9@meta.data$plate, fill=tissue)) + geom_bar() + geom_text(stat='count', aes(label=..count..), vjust=-.2) + theme(axis.text.x = element_text(angle = 90, hjust = 1)) + labs(title="Unfiltered", x="cDNA plate")
+
+ggplot(maca_tiss9_filtered@meta.data, aes(x = maca_tiss9_filtered@meta.data$plate, fill=tissue)) + geom_bar() + geom_text(stat='count', aes(label=..count..), vjust=-.2) + theme(axis.text.x = element_text(angle = 90, hjust = 1)) + labs(title="Filtered", x="cDNA plate")
+
+ggplot(maca_tiss9@meta.data, aes(x = maca_tiss9@meta.data$plate, y = maca_tiss9@meta.data$nReads, fill=tissue)) + geom_boxplot() + scale_y_log10() + theme(axis.text.x = element_text(angle = 90, hjust = 1))+ labs(title="Unfiltered", x="cDNA plate", y="nReads")
+
+ggplot(maca_tiss9_filtered@meta.data, aes(x = maca_tiss9_filtered@meta.data$plate, y = maca_tiss9_filtered@meta.data$nReads, fill=tissue)) + geom_boxplot() + scale_y_log10() + theme(axis.text.x = element_text(angle = 90, hjust = 1)) + labs(title="Filtered", x="cDNA plate", y="nReads")
+
+ggplot(maca_tiss9@meta.data, aes(x = maca_tiss9@meta.data$plate, y = maca_tiss9@meta.data$nGenes, fill=tissue)) + geom_boxplot() + scale_y_log10() + theme(axis.text.x = element_text(angle = 90, hjust = 1)) + labs(title="Unfiltered", x="cDNA plate", y="nGenes")
+
+ggplot(maca_tiss9_filtered@meta.data, aes(x = maca_tiss9_filtered@meta.data$plate, y = maca_tiss9_filtered@meta.data$nGenes, fill=tissue)) + geom_boxplot() + scale_y_log10() + theme(axis.text.x = element_text(angle = 90, hjust = 1)) + labs(title="Filtered", x="cDNA plate", y="nGenes")
+
+ggplot(maca_tiss9@meta.data, aes(x = maca_tiss9@meta.data$plate, y = maca_tiss9@meta.data$percent.ercc, fill=tissue)) + geom_boxplot() + theme(axis.text.x = element_text(angle = 90, hjust = 1)) + labs(title="Unfiltered", x="cDNA plate", y="% ERCCS")
+
+ggplot(maca_tiss9_filtered@meta.data, aes(x = maca_tiss9_filtered@meta.data$plate, y = maca_tiss9_filtered@meta.data$percent.ercc, fill=tissue)) + geom_boxplot() + theme(axis.text.x = element_text(angle = 90, hjust = 1)) + labs(title="Filtered", x="cDNA plate", y="% ERCCS")
+
+ggplot(maca_tiss9@meta.data, aes(x = maca_tiss9@meta.data$plate, y = maca_tiss9@meta.data$percent.ribo, fill=tissue)) + geom_boxplot() + theme(axis.text.x = element_text(angle = 90, hjust = 1)) + labs(title="Unfiltered", x="cDNA plate", y="% Ribo Genes")
+
+ggplot(maca_tiss9_filtered@meta.data, aes(x = maca_tiss9_filtered@meta.data$plate, y = maca_tiss9_filtered@meta.data$percent.ribo, fill=tissue)) + geom_boxplot() + theme(axis.text.x = element_text(angle = 90, hjust = 1)) + labs(title="Filtered", x="cDNA plate", y="% Ribo Genes")
+
+ggplot(maca_tiss9_filtered@meta.data, aes(x = maca_tiss9_filtered@meta.data$plate, y = maca_tiss9_filtered@meta.data$Uniquely.mapped.reads.., fill=tissue)) + geom_boxplot() + theme(axis.text.x = element_text(angle = 90, hjust = 1)) + labs(title="Filtered", x="cDNA plate", y="% Uniquely Mapped Reads")
+
+ggplot(maca_tiss9@meta.data, aes(x =maca_tiss9@meta.data$plate, y = maca_tiss9@meta.data$`% of reads unmapped: too short`, fill= tissue)) + geom_boxplot()+ theme(axis.text.x = element_text(angle = 90, hjust = 1)) + labs(title="Unfiltered", x="cDNA plate", y="% Reads Unmapped: Too Short")
+
+ggplot(maca_tiss9_filtered@meta.data, aes(x = maca_tiss9_filtered@meta.data$plate, y = maca_tiss9_filtered@meta.data$X..of.reads.unmapped..too.short, fill= tissue)) + geom_boxplot()+ theme(axis.text.x = element_text(angle = 90, hjust = 1)) + labs(title="Filtered", x="cDNA plate", y="% Reads Unmapped: Too Short")
+
+dev.off()
+```
+
+#MACA Run #10
+## Filter stats out of data and subset data
+```{r}
+row.names(maca_r10)[grep("__", row.names(maca_r10))]
+dim(maca_r10)
+#Subset the data from the stats
+maca_r10 <- maca_r10[-grep("__", row.names(maca_r10)),]
+dim(maca_r10)
+```
+
+##Make metadata for the run
+```{r}
+#make metadata
+cell_names <- (do.call(rbind, strsplit(colnames(maca_r10), "_")))
+#concatonate well and plates to make cell names
+cell_names_temp <- apply(cell_names, 1, function(x) paste(x[1], x[2], sep = "_"))
+#replace the column names in the gc table with cleaned cell names
+colnames(maca_r10) <- cell_names_temp
+#generate run metadata
+maca_r10_meta <- data.frame(row.names = colnames(maca_r10))
+maca_r10_meta$plate <- cell_names[ ,2]
+maca_r10_meta$well <- cell_names[ ,1]
+maca_r10_meta$run <- 10
+maca_r10_meta$cell.id <- rownames(maca_r10_meta)
+```
+
+##ERCC Stats and Filter
+```{r}
+#Find ERCC's, compute the percent ERCC, and drop them from the raw data
+erccs <- grep(pattern = "^ERCC-", x = rownames(x = maca_r10), value = TRUE)
+percent.ercc <- Matrix::colSums(maca_r10[erccs, ])/Matrix::colSums(maca_r10)
+ercc.index <- grep(pattern = "^ERCC-", x = rownames(x = maca_r10), value = FALSE)
+
+#Remove ERCCs from dataframe
+maca_r10 <- maca_r10[-ercc.index,]
+
+#add percent ERCC's to metadata
+maca_r10_meta$percent.ercc <- percent.ercc
+```
+
+##Append the run's log metadata to the run/plate metadata
+```{r}
+#Subset, transpose, rename the log metadata
+maca_log10<-maca_log10[c(5:9,21:27),]
+maca_log10<-as.data.frame(t(maca_log10), row.names = rownames(maca_r10_meta))
+
+#Convert % to Decimals
+maca_log10<-as.data.frame(apply(maca_log10,2, function(x){
+ as.numeric(sub("%", "", x, fixed=TRUE))}), row.names = row.names(maca_log10))
+
+#Merge with run metadata and clean row names
+maca_r10_meta<-merge(maca_r10_meta, maca_log10, by=0, row.names=T)
+rownames(maca_r10_meta)<-maca_r10_meta[,1]
+maca_r10_meta[,1]<-NULL
+
+#Merge the metadata with the plate metadata
+maca_r10_meta<-merge(maca_r10_meta, maca_meta, by.x = "plate", by.y="X", all.x = T)
+rownames(maca_r10_meta)<-maca_r10_meta$cell.id
+```
+
+##Generate Seurat Object
+```{r}
+maca_tiss10 <- CreateSeuratObject(raw.data = maca_r10, meta.data = maca_r10_meta)
+
+dim(maca_r10_meta)
+dim(maca_r10)
+maca_tiss10
+#The dimensions of the Seurat object will differ from the raw gc table because Seurat filters samples with 0 gene expression values from the dataset. 
+```
+
+##Rename the nUMI and nGene columns of Seurat Object
+```{r}
+colnames(maca_tiss10@meta.data)[colnames(maca_tiss10@meta.data) == 'nUMI'] <- 'nReads'
+colnames(maca_tiss10@meta.data)[colnames(maca_tiss10@meta.data) == 'nGene'] <- 'nGenes'
+```
+
+##Ribogene Metadata
+```{r}
+#Identify ribo genes in the Seurat object and calculate % ribo genes for each cell
+ribo.genes <- grep(pattern = "^Rp[sl][[:digit:]]", x = rownames(x = maca_tiss10@data), value = TRUE)
+percent.ribo <- Matrix::colSums(maca_tiss10@raw.data[ribo.genes, ])/Matrix::colSums(maca_tiss10@raw.data)
+#Add % ribo as a metadata column to the Seurat object
+maca_tiss10 <- AddMetaData(object = maca_tiss10, metadata = percent.ribo, col.name = "percent.ribo")
+```
+
+##Filter cells failing QC in Seurat object
+```{r}
+maca_tiss10_filtered<- FilterCells(maca_tiss10, subset.names = c('nGenes', 'nReads'), low.thresholds = c(500, 50000))
+#Compare the before and after filtered df size
+maca_tiss10
+maca_tiss10_filtered
+```
+
+##Generate QuickStats
+```{r}
+#pdf("~/Desktop/run10_quickstats.pdf")
+
+ggplot(maca_tiss10@meta.data, aes(x = maca_tiss10@meta.data$nGenes, y = maca_tiss10@meta.data$nReads, colour = maca_tiss10@meta.data$plate)) + geom_point() + geom_hline(yintercept = 50,000) + geom_vline(xintercept = 500) + scale_y_log10() + guides(colour=guide_legend(title="cDNA plate")) + labs(title="Unfiltered", x="nGenes", y="nReads")
+
+ggplot(maca_tiss10_filtered@meta.data, aes(x = maca_tiss10_filtered@meta.data$nGenes, y = maca_tiss10_filtered@meta.data$nReads, colour = maca_tiss10_filtered@meta.data$plate)) + geom_point() + geom_hline(yintercept = 50,000) + geom_vline(xintercept = 500) + scale_y_log10() + guides(colour=guide_legend(title="cDNA plate")) + labs(title="Filtered", x="nGenes", y="nReads")
+
+ggplot(maca_tiss10_filtered@meta.data, aes(x = maca_tiss10_filtered@meta.data$nGenes, y = maca_tiss10_filtered@meta.data$percent.ercc, colour = maca_tiss10_filtered@meta.data$plate)) + geom_point() + guides(colour=guide_legend(title="cDNA plate")) + scale_x_log10() + scale_y_log10() + labs(title="Filtered", x="nGenes", y="% ERCCS")
+
+ggplot(maca_tiss10@meta.data, aes(x = maca_tiss10@meta.data$plate, fill=tissue)) + geom_bar() + geom_text(stat='count', aes(label=..count..), vjust=-.2) + theme(axis.text.x = element_text(angle = 90, hjust = 1)) + labs(title="Unfiltered", x="cDNA plate")
+
+ggplot(maca_tiss10_filtered@meta.data, aes(x = maca_tiss10_filtered@meta.data$plate, fill=tissue)) + geom_bar() + geom_text(stat='count', aes(label=..count..), vjust=-.2) + theme(axis.text.x = element_text(angle = 90, hjust = 1)) + labs(title="Filtered", x="cDNA plate")
+
+ggplot(maca_tiss10@meta.data, aes(x = maca_tiss10@meta.data$plate, y = maca_tiss10@meta.data$nReads, fill=tissue)) + geom_boxplot() + scale_y_log10() + theme(axis.text.x = element_text(angle = 90, hjust = 1))+ labs(title="Unfiltered", x="cDNA plate", y="nReads")
+
+ggplot(maca_tiss10_filtered@meta.data, aes(x = maca_tiss10_filtered@meta.data$plate, y = maca_tiss10_filtered@meta.data$nReads, fill=tissue)) + geom_boxplot() + scale_y_log10() + theme(axis.text.x = element_text(angle = 90, hjust = 1)) + labs(title="Filtered", x="cDNA plate", y="nReads")
+
+ggplot(maca_tiss10@meta.data, aes(x = maca_tiss10@meta.data$plate, y = maca_tiss10@meta.data$nGenes, fill=tissue)) + geom_boxplot() + scale_y_log10() + theme(axis.text.x = element_text(angle = 90, hjust = 1)) + labs(title="Unfiltered", x="cDNA plate", y="nGenes")
+
+ggplot(maca_tiss10_filtered@meta.data, aes(x = maca_tiss10_filtered@meta.data$plate, y = maca_tiss10_filtered@meta.data$nGenes, fill=tissue)) + geom_boxplot() + scale_y_log10() + theme(axis.text.x = element_text(angle = 90, hjust = 1)) + labs(title="Filtered", x="cDNA plate", y="nGenes")
+
+ggplot(maca_tiss10@meta.data, aes(x = maca_tiss10@meta.data$plate, y = maca_tiss10@meta.data$percent.ercc, fill=tissue)) + geom_boxplot() + theme(axis.text.x = element_text(angle = 90, hjust = 1)) + labs(title="Unfiltered", x="cDNA plate", y="% ERCCS")
+
+ggplot(maca_tiss10_filtered@meta.data, aes(x = maca_tiss10_filtered@meta.data$plate, y = maca_tiss10_filtered@meta.data$percent.ercc, fill=tissue)) + geom_boxplot() + theme(axis.text.x = element_text(angle = 90, hjust = 1)) + labs(title="Filtered", x="cDNA plate", y="% ERCCS")
+
+ggplot(maca_tiss10@meta.data, aes(x = maca_tiss10@meta.data$plate, y = maca_tiss10@meta.data$percent.ribo, fill=tissue)) + geom_boxplot() + theme(axis.text.x = element_text(angle = 90, hjust = 1)) + labs(title="Unfiltered", x="cDNA plate", y="% Ribo Genes")
+
+ggplot(maca_tiss10_filtered@meta.data, aes(x = maca_tiss10_filtered@meta.data$plate, y = maca_tiss10_filtered@meta.data$percent.ribo, fill=tissue)) + geom_boxplot() + theme(axis.text.x = element_text(angle = 90, hjust = 1)) + labs(title="Filtered", x="cDNA plate", y="% Ribo Genes")
+
+ggplot(maca_tiss10_filtered@meta.data, aes(x = maca_tiss10_filtered@meta.data$plate, y = maca_tiss10_filtered@meta.data$Uniquely.mapped.reads.., fill=tissue)) + geom_boxplot() + theme(axis.text.x = element_text(angle = 90, hjust = 1)) + labs(title="Filtered", x="cDNA plate", y="% Uniquely Mapped Reads")
+
+ggplot(maca_tiss10@meta.data, aes(x =maca_tiss10@meta.data$plate, y = maca_tiss10@meta.data$`% of reads unmapped: too short`, fill= tissue)) + geom_boxplot()+ theme(axis.text.x = element_text(angle = 90, hjust = 1)) + labs(title="Unfiltered", x="cDNA plate", y="% Reads Unmapped: Too Short")
+
+ggplot(maca_tiss10_filtered@meta.data, aes(x = maca_tiss10_filtered@meta.data$plate, y = maca_tiss10_filtered@meta.data$X..of.reads.unmapped..too.short, fill= tissue)) + geom_boxplot()+ theme(axis.text.x = element_text(angle = 90, hjust = 1)) + labs(title="Filtered", x="cDNA plate", y="% Reads Unmapped: Too Short")
+
+dev.off()
+```
+
+
+#Merge the data frames into one 
+
+##Check that the gene names in the data set are all the same dimensions
+```{r}
+gene.names<-row.names(maca_r1)
+maca_r2_genes<-maca_r2[gene.names,]
+```
+
+##Concatonate the gc tables and metadata from the runs into one df to generate a Seurat object
+```{r}
+#Combine the runs
+maca_run_combined1<- cbind(maca_run1, maca_run2)
+maca_run_combined2<- cbind(maca_run_combined1,maca_run3)
+
+#Combine the metadata
+maca_combined_meta<- rbind(maca_r2_meta, maca_r2_meta)
+maca_combined_meta2<- rbind(maca_combined_meta, maca_r3_meta)
+maca_combined_meta_TEST<- merge(maca_combined_meta2, maca_meta[,c("plate","plate","subplate", "mouse.id")], by="plate", all.x=TRUE)
+```
+
+#MACA Combined Runs
+```{r}
+#maca_tiss_combined <- MergeSeurat(object1 = maca_tiss_combined, object2 = maca_tiss7_filtered)
+#maca_tiss_combined@meta.data$run<-as.factor(maca_tiss_combined@meta.data$run)
+
+maca_tiss_comb_unfil<-MergeSeurat(object1 = maca_tiss_comb_unfil, object2 = maca_tiss8)
+maca_tiss_comb_unfil@meta.data$run<-as.factor(maca_tiss_comb_unfil@meta.data$run)
+
+maca_tiss_comb_fil<- FilterCells(maca_tiss_comb_unfil, subset.names = c('nGenes', 'nReads'), low.thresholds = c(500, 50000))
+maca_tiss_comb_fil
+maca_tiss_comb_unfil
+maca_tiss_combined
+```
+
+##Generate Quickstats
+```{r}
+pdf(file = "~/Desktop/quickstats_combined_runs_1.pdf")
+
+ggplot(maca_tiss_comb_fil@meta.data, aes(x = maca_tiss_comb_fil@meta.data$tissue)) + geom_bar() + coord_flip() + geom_text(stat='count',position = position_stack(vjust = 0.5), aes(label=..count..), vjust=-.2) + theme(axis.text.x = element_text(angle = 90, hjust = 1)) + labs(title="Filtered", x="Tissue")
+
+ggplot(maca_tiss_comb_unfil@meta.data, aes(x = maca_tiss_comb_unfil@meta.data$tissue)) + geom_bar() + coord_flip() + geom_text(stat='count',position = position_stack(vjust = 0.5), aes(label=..count..), vjust=-.2) + theme(axis.text.x = element_text(angle = 90, hjust = 1)) + labs(title="Unfiltered", x="Tissue")
+
+ggplot(maca_tiss_comb_fil@meta.data, aes(x = maca_tiss_comb_fil@meta.data$nGenes, y = maca_tiss_comb_fil@meta.data$nReads, color= run)) + geom_point() + geom_hline(yintercept = 50,000) + geom_vline(xintercept = 500) + scale_y_log10() + guides(colour=guide_legend(title="Run")) + labs(title="Filtered", x="nGenes", y="nReads")
+
+ggplot(maca_tiss_comb_fil@meta.data, aes(x = maca_tiss_comb_fil@meta.data$tissue, y= maca_tiss_comb_fil@meta.data$nReads, color=run)) + geom_boxplot() + theme(axis.text.x = element_text(angle = 90, hjust = 1)) + labs(title="Filtered", x="Tissue", y="nReads")
+
+ggplot(maca_tiss_comb_fil@meta.data, aes(x = maca_tiss_comb_fil@meta.data$tissue, y= maca_tiss_comb_fil@meta.data$nGenes, color=run)) + geom_boxplot() + theme(axis.text.x = element_text(angle = 90, hjust = 1)) + labs(title="Filtered", x="Tissue", y="nGenes")
+
+ggplot(maca_tiss_comb_fil@meta.data, aes(x = maca_tiss_comb_fil@meta.data$tissue, y= maca_tiss_comb_fil@meta.data$percent.ercc, color= run)) + geom_boxplot() + theme(axis.text.x = element_text(angle = 90, hjust = 1)) + labs(title="Filtered", x="Tissue", y="% ERCC")
+
+ggplot(maca_tiss_comb_fil@meta.data, aes(x = maca_tiss_comb_fil@meta.data$tissue, y = maca_tiss_comb_fil@meta.data$Uniquely.mapped.reads.., color=run)) + geom_boxplot() + theme(axis.text.x = element_text(angle = 90, hjust = 1)) + labs(title="Filtered", x="Tissue", y="% Uniquely Mapped Reads")
+
+dev.off()
+```
+
