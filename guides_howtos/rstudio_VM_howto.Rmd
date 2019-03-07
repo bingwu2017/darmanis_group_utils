@@ -13,7 +13,8 @@ output: html_document
   1. Make sure region is Oregon    
   2. Select *Launch Instance*          
   3. Select *Community AMIs* from the left most panel   
-  4. In the search bar, enter *rstudio julia*       
+  4. In the search bar, enter *rstudio julia* 
+    * Alternatively look for RStudio and use RStudio_3.5.2 which is the upgraded version of julia running R3.5.2 *
   5. Select the AMI you want to spin up              
       (I usually go with *RStudio-1.0.153_R-3.4.1_Julia-0.6.0_ubuntu-16.04-LTS-64bit*)        
   6. Choose the instance type you want            
