@@ -7,6 +7,7 @@ date: "7/3/2019"
 * You will need an instance that already has rstudio server installed. 
 * See darmanis_group_utils/guides_howtos/rstudio_VM_howto
 
+##############################################################################################################################
 **From your EC2 console:**                 
  0. Stop rstudio server 
   $ rstudio-server stop
@@ -16,8 +17,24 @@ date: "7/3/2019"
   $ ./configure --prefix=/opt/R/X.X.X --enable-R-shlib --with-blas --with-lapack --enable-shared 
   $ make
   $ sudo make install
+ 4. Optionally, you might want to point the R command to the latest R build. In this case, R version X.X.X.
+  $ sudo ln -s /opt/R/X.X.X/bin/R /bin/R 
+ 5. Restart Rstudio-server 
+  $ rstudio-server start 
+ 6. Check that everythign is working and if ok log back in to your R session
+  $ rstudio-server status
+  
+  NOTE on login----------------------------------------------------------------------------------------  
+  If you cant login you will need to change the username and password. Do this in the following way 
+  $ sudo /usr/bin/passwd <usrname> 
+  Pick your password when prompted. 
+  Log in using <usrname> and your password. 
+-------------------------------------------------------------------------------------------------------
+##############################################################################################################################
 
-One of the reasons this can fail is absence of java. Installing Java :
+
+##############################################################################################################################
+ One of the reasons the above can fail is absence of java. Installing Java :
 
   1. Download latest Java SE Development Kit (https://www.oracle.com/technetwork/java/javase/downloads/index.html)
   2. Create /opt/jdk
@@ -39,13 +56,8 @@ One of the reasons this can fail is absence of java. Installing Java :
     Java(TM) SE Runtime Environment 18.9 (build 11.0.2+9-LTS)
     Java HotSpot(TM) 64-Bit Server VM 18.9 (build 11.0.2+9-LTS, mixed mode)
     -----------------------------------------------------------------------
+##############################################################################################################################
 
-4. Optionally, you might want to point the R command to the latest R build. In this case, R version X.X.X.
-  $ sudo ln -s /opt/R/X.X.X/bin/R /bin/R 
-5. REstart Rstudio-server 
-  $ rstudio-server start 
-6. Check that everythign is working and if ok log back in to your R session
-  $ rstudio-server status
 
 
 ##############################################################################################################################
