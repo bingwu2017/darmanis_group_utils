@@ -2,7 +2,6 @@
 title: "Upgrade_R_and_intall_multiple_versions.Rmd"
 author: "Spyros Darmanis"
 date: "7/3/2019"
-output: html_document
 ---
 
 * You will need an instance that already has rstudio server installed. 
