@@ -42,3 +42,17 @@ One of the reasons this can fail is absence of java. Installing Java :
 
 4. Optionally, you might want to point the R command to the latest R build. In this case, R version X.X.X.
   $ sudo ln -s /opt/R/X.X.X/bin/R /bin/R 
+5. REstart Rstudio-server 
+  $ rstudio-server start 
+6. Check that everythign is working and if ok log back in to your R session
+  $ rstudio-server status
+
+
+##############################################################################################################################
+Installing rstudio-server. Check here for latest version (https://www.rstudio.com/products/rstudio/download-server/)
+$ sudo apt-get install gdebi-core
+$ wget https://download2.rstudio.org/rstudio-server-1.1.463-amd64.deb
+$ sudo gdebi rstudio-server-1.1.463-amd64.deb
+##############################################################################################################################
+
+
