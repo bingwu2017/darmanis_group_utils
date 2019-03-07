@@ -4,9 +4,18 @@ author: "Spyros Darmanis"
 date: "7/3/2019"
 ---
 
-* You will need an instance that already has rstudio server installed. 
+* You will need an instance that already has rstudio server installed. Or you can install it from scratch using 
 * See darmanis_group_utils/guides_howtos/rstudio_VM_howto
+##############################################################################################################################
+Installing rstudio-server. Check here for latest version (https://www.rstudio.com/products/rstudio/download-server/)
+$ sudo apt-get install gdebi-core
+$ wget https://download2.rstudio.org/rstudio-server-1.1.463-amd64.deb
+$ sudo gdebi rstudio-server-1.1.463-amd64.deb
+##############################################################################################################################
 
+
+* The following instructions can be used to install different versions of R and use them interchangeably with rstudio (restarting
+the session in the process)
 ##############################################################################################################################
 **From your EC2 console:**                 
  0. Stop rstudio server 
@@ -23,6 +32,11 @@ date: "7/3/2019"
   $ rstudio-server start 
  6. Check that everythign is working and if ok log back in to your R session
   $ rstudio-server status
+ 7. If you need to change R versions then do the following:
+    i) rstudio-server stop
+   ii) sudo ln -sf /opt/R/3.4.0/bin/R /bin/R (or any other version you have installed in your /opt/R) 
+  iii) rstudio-server start
+ 8. Log in rstudio  
   
   NOTE on login----------------------------------------------------------------------------------------  
   If you cant login you will need to change the username and password. Do this in the following way 
@@ -62,11 +76,6 @@ date: "7/3/2019"
 
 
 
-##############################################################################################################################
-Installing rstudio-server. Check here for latest version (https://www.rstudio.com/products/rstudio/download-server/)
-$ sudo apt-get install gdebi-core
-$ wget https://download2.rstudio.org/rstudio-server-1.1.463-amd64.deb
-$ sudo gdebi rstudio-server-1.1.463-amd64.deb
-##############################################################################################################################
+
 
 
