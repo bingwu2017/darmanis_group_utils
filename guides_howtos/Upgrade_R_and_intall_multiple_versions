@@ -29,6 +29,8 @@ date: "7/3/2019"
   $ sudo /usr/bin/passwd <usrname> 
   Pick your password when prompted. 
   Log in using <usrname> and your password. 
+  
+  ! Current default usrname/password on AMI (Rstudio3.5.2) is ubuntu/ubuntu
 -------------------------------------------------------------------------------------------------------
 ##############################################################################################################################
 
